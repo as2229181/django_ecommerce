@@ -1,0 +1,6 @@
+asgiref==3.6.0
+Django==3.2.18
+mysqlclient @ file:///C:/Users/as222/Downloads/mysqlclient-1.4.6-cp37-cp37m-win_amd64.whl
+pytz==2022.7.1
+sqlparse==0.4.3
+typing_extensions==4.5.0
