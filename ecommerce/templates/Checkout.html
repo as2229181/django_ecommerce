@@ -58,21 +58,22 @@
                 <div style="flex:1"><strong>Quantity</strong></div>
                 <div style="flex:1"><strong>Total</strong></div>
             </div>  
-            
+            {% for item in items %}
             <div class="cart-row">
-                <div style="flex:2"><img class="row-image" src="{% static 'images/keyboard.jpg' %}" ></div>
-                <div style="flex:2">Product 1</div>
-                <div style="flex:1"><strong>$40</strong></div>
+                <div style="flex:2"><img class="row-image" src="{{ item.product.imagURL }}" ></div>
+                <div style="flex:2">{{item.product.name}}</div>
+                <div style="flex:1"><strong>${{item.product.price}}</strong></div>
                 <div style="flex:1">
-                    <p class="'quantity">2</p>
+                    <p class="'quantity">{{item.quantity}}</p>
                     <img class="chg-quantity" src="{% static 'images/up icon.png' %}" >
                     <img class="chg-quantity" src="{% static 'images/down icon.png' %}">
                 </div>
-                <div style="flex:1"><strong>$80</strong></div>
+                <div style="flex:1"><strong>${{item.get_total}}</strong></div>
             </div> 
-            <hr style="border: 2px solid rgb(235, 19, 19);">
-            <h5>Item:2</h5>
-            <h5>Total:$80</h5>
+            {% endfor %}
+            <hr style="border: 2px solid black;">
+            <h5>Item:{{order.get_cart_items}}</h5>
+            <h5>Total:${{ order.get_cart_total|floatformat:2 }}</h5>
         </div>
     </div>
     
