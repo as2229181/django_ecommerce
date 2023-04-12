@@ -30,7 +30,7 @@ h1,h2,h3,h4,h5,h6{
 }
 
 .bg-dark{
-	background-color: #4f868c!important;
+	background-color: #687172!important;
 }
 
 #cart-icon{
@@ -56,6 +56,7 @@ h1,h2,h3,h4,h5,h6{
 
 .btn{
 	border-radius: 0;
+	margin: 0 auto;
 }
 
 .row-image{
@@ -101,3 +102,9 @@ h1,h2,h3,h4,h5,h6{
 .hidden{
 	display: none!important;
 }
+
+#form-button {
+	width: 50%;
+	margin: 0 auto;
+  }
+

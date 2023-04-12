@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'widget_tweaks',
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'store.apps.StoreConfig',
+   
 ]
 
 MIDDLEWARE = [
@@ -77,7 +80,7 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_ecommerce',
+        'NAME': 'django_ecommerce1',
         'USER' : 'root',
         'PASSWORD' : '12345678',
         'HOST' : '127.0.0.1',
@@ -134,3 +137,16 @@ MEDIA_ROOT=os.path.join(BASE_DIR,'static/images')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+JAZZMIN_SETTINGS ={
+    "site_header": "shopping",
+    "site_brand": "e-commerce",
+    "welcome_sign": "Welcome to the shop-backend",
+      "copyright": "G-shin",
+      "site_logo": "C:/Users/as222/virtualenv/django_ecart/ecommerce/static/images/orange.jpg",
+
+    
+
+}
+AUTH_USER_MODEL='store.User'
