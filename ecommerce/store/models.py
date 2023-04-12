@@ -122,7 +122,13 @@ class Product(models.Model):
     freature=models.BooleanField(default=False)
     digital=models.BooleanField(default=False,null=True,blank=False) #判斷是不是實體的東西所以要不要運送
     
+    sku=ShortUUIDField(unique=True,length=4 ,max_lenghh=10,prefix='sku',alphabet='1234567890' )
+    date=models.DecimalField(auto_now_add=True)
+    updated=models.DecimalField(null=True,blank=True)
+    
     image =models.ImageField(null=True,blank=True) 
+    class Meta:
+        verbose_name_plural='Products'
     def __str__(self):
         return self.name
     @property
