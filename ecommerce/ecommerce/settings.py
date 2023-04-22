@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'store.apps.StoreConfig',
+    'taggit',
+    'ckeditor',
+    'ckeditor_uploader'
    
 ]
 
@@ -62,6 +65,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'store.context_processor.default',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -80,7 +84,7 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_ecommerce1',
+        'NAME': 'django_ecommerce2',
         'USER' : 'root',
         'PASSWORD' : '12345678',
         'HOST' : '127.0.0.1',
@@ -150,3 +154,7 @@ JAZZMIN_SETTINGS ={
 
 }
 AUTH_USER_MODEL='store.User'
+
+
+
+CKEDITOR_UPLOAD_PATH='uploads/'

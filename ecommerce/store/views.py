@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.http import JsonResponse
 from .models import*
 import json
@@ -8,6 +8,8 @@ from .form import UserRegisterForm
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout,get_user_model
 from django.conf import settings
+from django.db.models import Count
+from  taggit.models import Tag
 # Create your views here.
 User=get_user_model()
 def register(request):
@@ -146,3 +148,98 @@ def processOrder(request):
             )    
     return JsonResponse('Payment completed',safe=False)
 
+def test(request):
+    return render(request,'new cart/about.html')
+def test1(request):
+    return render(request,'new cart/contact.html')
+
+
+def test2(request):
+    category=Category.objects.all()
+    # category=Category.objects.all().annotate(product_count=Count('product'))
+    context={
+        'category':category
+        
+    }
+    return render(request,'new cart/index.html',context)
+
+def test3(request,sui):
+    product=Product.objects.get(sui=sui)
+    p_images=product.p_image.all()
+    related_product=Product.objects.filter(category=product.category)
+    # print(p_images)
+    product_images=[]
+    for p in p_images:
+        product_images.append(p.image.url)
+    print(product_images)  
+    for index ,images in enumerate(product_images)  :
+        print (index ,images)
+    
+    context={
+        'product':product,
+        'p_images':p_images,
+        'product_images_enumerated':enumerate(product_images),
+        'product_images':product_images,
+        'related_product':related_product
+            
+    }
+    return render(request,'new cart/shop-single.html',context)
+def test4(request):
+    product=Product.objects.all()
+    category=Category.objects.all()
+    data=cartData(request)
+    items=data['items']
+    order=data['order']
+    cartItems=data['cartItems']  
+    products=Product.objects.all()
+    context={'word':'this is  store page',
+             'Products':products,
+             'order':order,
+             "items":items,
+             "cartItems":cartItems,
+             'category':category}
+    context={
+        'products':product
+        
+    }
+    return render(request,'new cart/shop.html',context)
+def test5(request, cid):
+    category=Category.objects.get(cid=cid)
+    product=Product.objects.filter(category=category)
+    context={
+        'category':category,
+        'product':product
+        
+    }
+    return render(request,'new cart/category.html',context)
+
+def test6(request):
+    vendor=Vendor.objects.all()
+    context={
+        'vendor':vendor
+    }
+    return render(request,'new cart/vendor.html',context)
+
+def test7(request,vid):
+    vendor=Vendor.objects.get(vid=vid)
+    products=Product.objects.filter(vendor=vendor)
+    # category=Category.objects.filter(vendor=vendor)
+    context={
+        'vendor':vendor,
+        'products':products
+        
+        
+    }
+    return render(request,'new cart/vendor-detail.html',context)
+
+
+def test8(request,tag_slug=None):
+    products=Product.objects.filter(product_status='published').order_by('-date')
+    tag=None
+    if tag_slug:
+        tag=get_object_or_404(Tag,slug=tag_slug)
+        products=products.filter(tags__in=[tag])
+        context={
+            'products':products     
+        }
+    return render(request,'new cart/tag_shop.html',context)
