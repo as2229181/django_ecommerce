@@ -88,7 +88,8 @@ DATABASES = {
         'USER' : 'root',
         'PASSWORD' : '12345678',
         'HOST' : '127.0.0.1',
-        'PORT' : '3306'
+        'PORT' : '3306',
+        
     
     }
 }
@@ -148,7 +149,7 @@ JAZZMIN_SETTINGS ={
     "site_brand": "e-commerce",
     "welcome_sign": "Welcome to the shop-backend",
       "copyright": "G-shin",
-      "site_logo": "C:/Users/as222/virtualenv/django_ecart/ecommerce/static/images/orange.jpg",
+      
 
     
 
