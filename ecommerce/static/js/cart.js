@@ -1,3 +1,4 @@
+/*
 var updateBtns=document.getElementsByClassName("update-cart")
 
 
@@ -58,3 +59,4 @@ function updateUserOrder(productId,action){
         location.reload()
     });
 }
+*/

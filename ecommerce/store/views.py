@@ -4,12 +4,14 @@ from .models import*
 import json
 import datetime
 from .utils import cookeieCart,cartData,guestOrder
-from .form import UserRegisterForm
+from .form import UserRegisterForm,ProductReviewForm
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout,get_user_model
-from django.conf import settings
-from django.db.models import Count
+from django.db.models import Count,Avg
 from  taggit.models import Tag
+from django.db.models import Q
+from django.template.loader import render_to_string  
+        
 # Create your views here.
 User=get_user_model()
 def register(request):
@@ -167,6 +169,16 @@ def test3(request,sui):
     product=Product.objects.get(sui=sui)
     p_images=product.p_image.all()
     related_product=Product.objects.filter(category=product.category)
+    reviews=ProductReview.objects.filter(product=product)
+    average_rating=ProductReview.objects.filter(product=product).aggregate(rating=Avg('rating'))
+    review_form=ProductReviewForm()
+   
+    make_review=True
+    if request.user.is_authenticated:
+        user_review_count=ProductReview.objects.filter(user=request.user,product=product).count()
+        if user_review_count>0:
+            make_review=False
+        
     # print(p_images)
     product_images=[]
     for p in p_images:
@@ -178,6 +190,10 @@ def test3(request,sui):
     context={
         'product':product,
         'p_images':p_images,
+        'reviews':reviews,
+        'make_review':make_review,
+        'review_form':review_form,
+        'average_rating':average_rating,
         'product_images_enumerated':enumerate(product_images),
         'product_images':product_images,
         'related_product':related_product
@@ -243,3 +259,72 @@ def test8(request,tag_slug=None):
             'products':products     
         }
     return render(request,'new cart/tag_shop.html',context)
+
+def ajax_add_review(request,sui):
+    product=Product.objects.get(sui=sui)
+    user=request.user
+    review=ProductReview.objects.create(
+        user=user,
+        product=product,
+        review=request.POST['review'],
+        rating=request.POST['rating']
+    )
+    username=user.username
+    print(username)
+    
+  
+    
+    context={
+        'user':user.username,
+        'review':request.POST['review'],
+        'rating':request.POST['rating'],
+        'date':review.date
+    }
+    average_rating=ProductReview.objects.filter(product=product).aggregate(rating=Avg('rating'))
+    
+    return JsonResponse(
+        {'bool': True,
+        'context':context,
+        'average_rating':average_rating
+
+        } 
+    )
+    
+def search_view(request):
+    query= request.GET.get('q')
+    products=Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query)).order_by('-date')
+    print(query)
+    print(products)
+    
+    context={
+        'products':products,
+        'query':query        
+    }
+    return render(request,'new cart/search.html',context)
+
+def filter_product(request):
+    categories=request.GET.getlist('category[]')
+    vendors=request.GET.getlist('vendor[]')
+    tags=request.GET.getlist('tag[]')
+    min_price=request.GET['min_price']
+    max_price=request.GET['max_price']
+    
+    products=Product.objects.all().order_by('-id').distinct()
+    products=products.filter(price__gte=min_price)
+    products=products.filter(price__lte=max_price)
+    
+    
+    print(categories)
+    print(vendors)
+    if len(categories) > 0 :
+        products=products.filter(category__id__in=categories).distinct()
+    if len(vendors) > 0 :
+        products=products.filter(vendor__id__in=vendors).distinct()
+    if len(tags) > 0 :
+            products=products.filter(tags__id__in=tags).distinct()
+        
+    data= render_to_string("new cart/async/product-list.html",{"products":products})  
+    
+    return JsonResponse({"data":data})
+        
+     

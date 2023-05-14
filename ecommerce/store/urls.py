@@ -25,5 +25,8 @@ urlpatterns=[
     path('test6',views.test6,name='test6'),
     path('test7/<vid>/',views.test7,name='test7'),
     path('test8/<slug:tag_slug>/',views.test8,name='test8'),
+    path('ajax_add_review/<sui>',views.ajax_add_review,name='ajax_add_review'),
+    path('search',views.search_view,name='search'),
+    path('filter_product/',views.filter_product,name='filter_product'),
     ]
 

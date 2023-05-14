@@ -4,8 +4,7 @@ from django.conf import settings
 from shortuuid.django_fields import ShortUUIDField
 from django.utils.html import mark_safe 
 from taggit.managers import TaggableManager
-from ckeditor_uploader.fields import RichTextUploadingField
- 
+from ckeditor.fields import RichTextField
 def user_directory_path(instance,filename):
     return 'user_{0}/{1}'.format(instance.user.id,filename)
 
@@ -26,6 +25,7 @@ STATUS=(
 
 
 RATING=(
+    ('', 'Chose the score'),
     ('1','★✰✰✰✰'),
     ('2','★★✰✰✰'),
     ('3','★★★✰✰'),
@@ -53,10 +53,14 @@ class User(AbstractUser):
 class Category(models.Model):
     cid=ShortUUIDField(unique=True, length=10, max_length=20, prefix='cat', alphabet='abcdefghijkl1234567890')       
     title=models.CharField(max_length=100)
-    image=models.ImageField (upload_to='category') 
-     
+    image=models.ImageField (upload_to='category')  
     class Meta:
         verbose_name_plural='Categories'
+        
+    def product_count(self):
+        count=self.category.product.all()
+        counts=sum([product.get_total for product in count])
+        return counts
     
     def Category_image(self):
         return mark_safe('<img src="%s" width="50" height="50"/>' %(self.image.url))
@@ -75,7 +79,7 @@ class Vendor(models.Model):
     title=models.CharField(max_length=1000)
     image=models.ImageField(upload_to=user_directory_path,default='user.jpg')
     # descripton=models.TextField(null=True , blank=True)
-    descripton=RichTextUploadingField(null=True , blank=True)
+    descripton=RichTextField(null=True , blank=True)
     date=models.DateTimeField(null=True,blank=True)
     address=models.CharField(max_length=100,default='123,main,street')
     contact=models.CharField(max_length=100,default='+886 0912768057')
@@ -117,10 +121,10 @@ class Product(models.Model):
     
     name=models.CharField(max_length=200)
     user=models.ForeignKey(User,on_delete=models.SET_NULL,null=True,blank=True)
-    category=models.ForeignKey(Category,on_delete=models.SET_NULL,null=True,blank=True,related_name='category')
+    category=models.ForeignKey(Category,on_delete=models.SET_NULL,null=True,blank=True,related_name='product')
     vendor=models.ForeignKey(Vendor,on_delete=models.SET_NULL,null=True,related_name='vendor')
     # description= models.TextField(null=True,blank=True,default='This is product!!!')
-    description= RichTextUploadingField(null=True,blank=True,default='This is product!!!')
+    description= RichTextField(null=True,blank=True,default='This is product!!!')
     price=models.DecimalField(max_digits=7,decimal_places=2)
     old_price=models.DecimalField(max_digits=7,decimal_places=2,null=True,blank=True)
     specifications=models.TextField(null=True,blank=True )
@@ -243,14 +247,15 @@ class ShippingAddress(models.Model):
 ################################## Product Review,wishlist,Address#################################
 ################################## Product Review,wishlist,Address#################################
 ################################## Product Review,wishlist,Address#################################
-class ProudcutReview(models.Model):
+class ProductReview(models.Model):
+    user=models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
     customer=models.ForeignKey(Customer,on_delete=models.SET_NULL,null=True)
-    product=models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)
+    product=models.ForeignKey(Product,on_delete=models.SET_NULL,null=True,related_name='review')
     review=models.TextField()
-    rating=models.IntegerField(choices=RATING,default=None)
+    rating=models.CharField(max_length=1,choices=RATING,default=None)
     date=models.DateField(auto_now_add=True)
     class Meta:
-        verbose_name_plural='Shipping address'
+        verbose_name_plural='ProductReviews'
         
     def __str__(self):
         return self.product.name

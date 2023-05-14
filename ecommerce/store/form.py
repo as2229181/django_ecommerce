@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from store.models import User
+from store.models import User,ProductReview
 
 
 
@@ -14,3 +14,10 @@ class UserRegisterForm(UserCreationForm):
             model=User
             fields=['username',
                     'email']
+            
+            
+class ProductReviewForm(forms.ModelForm):
+        review = forms.CharField(widget=forms.Textarea(attrs={'placeholder':'Write review'}))
+        class Meta:
+                model=ProductReview
+                fields=['review','rating']
