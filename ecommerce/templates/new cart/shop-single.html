@@ -149,12 +149,14 @@
                 <div class="col-lg-7 mt-5">
                     <div class="card">
                         <div class="card-body">
-                            <input type="hidden" value="{{ product.id }}" class="product-id" name="" id="">
-                            <input type="hidden" value="{{ product.name }}" class="product-name" name="" id="">
+                            <input type="hidden" value="{{ product.id }}" class="product-id-{{ product.id }}" name="" id="">
+                            <input type="hidden" value="{{ product.name }}" class="product-name-{{ product.id }}" name="" id="">
+                            <input type="hidden" value="{{ product.image.url }}" class="product-image-{{ product.id }}" name="" id="">
+                            <input type="hidden" value="{{ product.sui }}" class="product-pid-{{ product.id }}" name="" id="">
                             <h1 class="h2">{{product.name}}</h1>
                             <hr/>
                             <p class="blockquote-footer">Stock:{{ product.stock_count }}</p>
-                            <p class="h2 py-2" id="current-product-price">${{ product.price }}</p>
+                            <span>$</span><span class="h2 py-2 current-product-price-{{ product.id }}" >{{ product.price }}</span>
                             {% if product.price == product.old_price  %}
                             {% elif product.old_price == None  %}
                             {% else %}
@@ -203,7 +205,7 @@
                                 <li>Excepteur sint</li>
                             </ul>
 
-                            <form action="" method="GET">
+                            <form action="add_to_cart" method="GET">
                                 <input type="hidden" name="product-title" value="Activewear">
                                 <div class="row">
                                     <div class="col-auto">
@@ -221,23 +223,24 @@
                                         <ul class="list-inline pb-3">
                                             <li class="list-inline-item text-right">
                                                 Quantity
-                                                <input type="hidden" name="product-quanity" id="product-quanity" value="1">
+                                                <input type="hidden" class="product-quantity-{{ product.id }}" name="product-quanity " id="product-quanity" value="1">
                                             </li>
                                             <li class="list-inline-item"><span class="btn btn-success" id="btn-minus">-</span></li>
-                                            <li class="list-inline-item"><span  class="badge bg-secondary" id="var-value" value="1">1</li>
+                                            <li class="list-inline-item"><span  class="badge bg-secondary  " id="var-value" value="1">1</li>
                                             <li class="list-inline-item"><span class="btn btn-success" id="btn-plus">+</span></li>
                                         </ul>
                                     </div>
                                 </div>
+                            </form>
                                 <div class="row pb-3">
                                     <div class="col d-grid">
                                         <button type="submit" class="btn btn-success btn-lg" name="submit" value="buy">Buy</button>
                                     </div>
                                     <div class="col d-grid">
-                                        <button type="submit" class="btn btn-success btn-lg" name="submit" value="addtocard" id="add-to-cart-btn">Add To Cart</button>
+                                        <button type="submit" class="btn btn-success btn-lg add-to-cart-btn" data-index="{{ product.id }}" name="submit" value="addtocard" id="add-to-cart-btn">Add To Cart</button>
                                     </div>
                                 </div>
-                            </form>
+                            
 
                         </div>
                     </div>
@@ -561,6 +564,15 @@
         </div>
         <script src="{% static 'newcart/js/jquery-migrate-1.2.1.min.js' %}"></script>
         <script src="{% static 'newcart/js/jquery-1.11.0.min.js' %}"></script>
+
+
+        <script>
+            // 綁定<span>元素的變動事件
+            $('#var-value').on('input', function() {
+              // 當<span>元素的值變動時，將其值設置為<input>元素的value屬性
+              $('#product-quantity').val($(this).text());
+            });
+          </script>
     </section>
     <!-- End Article -->
 

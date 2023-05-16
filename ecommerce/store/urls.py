@@ -9,7 +9,7 @@ from django.contrib import admin
 
 urlpatterns=[
     path("",views.store,name="store"),
-    path("cart/",views.cart, name="cart"),
+    path("cart/",views.cart, name="cart1"),
     path('checkout/',views.checkout, name="checkout"),
     path("update_item/",views.updateItem,name="update_item"),
     path("process_order/",views.processOrder,name="processOrder"),
@@ -28,5 +28,7 @@ urlpatterns=[
     path('ajax_add_review/<sui>',views.ajax_add_review,name='ajax_add_review'),
     path('search',views.search_view,name='search'),
     path('filter_product/',views.filter_product,name='filter_product'),
+    path('add_to_cart/',views.add_to_cart,name='add_to_cart'),
+    path('cart_view/',views.cart_view,name='cart'),
     ]
 

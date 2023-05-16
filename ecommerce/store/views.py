@@ -327,4 +327,56 @@ def filter_product(request):
     
     return JsonResponse({"data":data})
         
-     
+def add_to_cart(request):
+    cart_product={}
+    totalcaritems=0
+    cart_product[str(request.GET['id'])]={
+        'name':request.GET['name'],
+        'price':request.GET['price'],
+        'quantity':request.GET['quantity'],
+        'pid':request.GET['pid'],
+        'product_image':request.GET['product_image'],
+        'total_price':''
+    }
+
+    if 'cart_data_obj' in request.session:
+        if str(request.GET['id']) in request.session['cart_data_obj']:
+            cart_data = request.session['cart_data_obj']
+            cart_data[str(request.GET['id'])]['quantity'] = int(cart_product[str(request.GET['id'])]['quantity']) + int(cart_data[str(request.GET['id'])]['quantity'])
+            cart_data.update(cart_data)
+
+            cart_data[str(request.GET['id'])]['total_price'] = float(cart_data[str(request.GET['id'])]['price']) * int(cart_data[str(request.GET['id'])]['quantity'])
+            cart_data.update(cart_data)
+            request.session["cart_data_obj"] = cart_data
+            totalcaritems=len(request.session['cart_data_obj'])
+        else:
+            cart_data = request.session['cart_data_obj']
+            cart_data.update(cart_product)
+            cart_data[str(request.GET['id'])]['total_price'] = float(cart_data[str(request.GET['id'])]['price']) * int(cart_data[str(request.GET['id'])]['quantity'])
+            cart_data.update(cart_data)
+            request.session['cart_data_obj'] = cart_data
+            totalcaritems=len(request.session['cart_data_obj'])
+    else:
+        cart_product[str(request.GET['id'])]['total_price']= int(cart_product[str(request.GET['id'])]['quantity'])*float(cart_product[str(request.GET['id'])]['price'])
+        request.session['cart_data_obj']= cart_product
+        totalcaritems=len(request.session['cart_data_obj'])
+    
+    print (request.session['cart_data_obj'])
+    
+    return JsonResponse({'data':request.session["cart_data_obj"],'totalcaritems':totalcaritems})
+
+
+def cart_view(request):
+    cart_total_amount = 0
+    if 'cart_data_obj' in request.session:
+        for p_id, item in request.session['cart_data_obj'].items():
+            cart_total_amount += int(item['quantity'])*float(item['price'])
+        cart_data =request.session['cart_data_obj']
+        context={'cart_data':cart_data,'totalcaritems':len(request.session['cart_data_obj']),'cart_total_account':cart_total_amount}
+        print (request.session['cart_data_obj']) 
+
+        return render(request,'new cart/Cart.html',context)
+    else:
+        messages.warning(request,'Your cart is empty!!')
+        print(' not in')
+        return  redirect("test4")
