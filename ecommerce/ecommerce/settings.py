@@ -175,3 +175,32 @@ CKEDITOR_CONFIGS={
         )
     }
 }
+
+'''
+Django looger
+'''
+
+
+LOGGING={
+    'version':1,
+    'loggers'  :{
+        'django':{
+            'hanndlers':['file'],
+            'level':'DEBUG'
+        }
+    },
+    'handlers':{
+        'file':{
+            'level':'DEBUG',
+            'class':'logging.FileHandler',
+            'filename':'log.log'
+        }
+    },
+    'formatters':{
+        'formar_demo':{
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {mseeage}',
+            'style': '{',
+        }
+
+    }
+}

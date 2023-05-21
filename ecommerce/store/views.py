@@ -11,7 +11,13 @@ from django.db.models import Count,Avg
 from  taggit.models import Tag
 from django.db.models import Q
 from django.template.loader import render_to_string  
-        
+import logging
+
+
+'''
+Setting logger in views.py
+'''
+Logger = logging.getLogger('django')
 # Create your views here.
 User=get_user_model()
 def register(request):
@@ -361,7 +367,7 @@ def add_to_cart(request):
         request.session['cart_data_obj']= cart_product
         totalcaritems=len(request.session['cart_data_obj'])
     
-    print (request.session['cart_data_obj'])
+    print(totalcaritems)
     
     return JsonResponse({'data':request.session["cart_data_obj"],'totalcaritems':totalcaritems})
 
@@ -374,9 +380,26 @@ def cart_view(request):
         cart_data =request.session['cart_data_obj']
         context={'cart_data':cart_data,'totalcaritems':len(request.session['cart_data_obj']),'cart_total_account':cart_total_amount}
         print (request.session['cart_data_obj']) 
-
+        print (len(request.session['cart_data_obj']))
         return render(request,'new cart/Cart.html',context)
     else:
         messages.warning(request,'Your cart is empty!!')
         print(' not in')
         return  redirect("test4")
+    
+
+def delete_from_cart(request):
+    product_id=str(request.GET['id'])
+    if 'cart_data_obj' in request.session:
+        if product_id in request.session['cart_data_obj']:
+            cart_data=request.session['cart_data_obj']
+            del cart_data[product_id]
+            request.session['cart_product_obj'] =cart_data
+            request.session.modified = True  # 更新 session 中的資料
+            request.session.save()  # 儲存 session 變更
+    cart_total_amount = 0
+    if 'cart_data_obj' in request.session:
+        for p_id, item in request.session['cart_data_obj'].items():
+            cart_total_amount += int(item['quantity'])*float(item['price'])  
+    context= render_to_string('new cart/async/cart-list.html',{'cart_data':request.session['cart_data_obj'],'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount})           
+    return JsonResponse({'data':context,'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount})

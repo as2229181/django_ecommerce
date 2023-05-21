@@ -108,39 +108,10 @@ $(document).ready(function(){
                 console.log("Data filter successfully!!!");
                 $('#filtered-product').html(response.data)
             }
-
-
+        
         })
-    })
-    $('#max_price').on('blur',function(){
-        let min_price = $(this).attr('min')
-        let max_price = $(this).attr('max')
-        let current_price = $(this).val()
-        console.log("Value is :",current_price);
-        console.log("Min price is :", min_price);
-        console.log("Max_price is :",max_price );
-        if(current_price < parseInt(min_price) || current_price > parseInt(max_price)){
-            console.log('Price Error Occurred!!');
-
-            min_price = Math.round(min_price * 100) / 100
-            max_price = Math.round(max_price * 100) / 100
-
-            console.log("Max Price is:", min_price)
-            console.log("Max Price is:", max_price)
-            alert("Price must between "+ min_price + 'and' + max_price)
-            $(this).val(min_price)
-            $("#range").val(min_price)
-
-            $(this).focus()
-
-
-            return false
-        }
-    })
-
-})
-
-$('.add-to-cart-btn').on('click',function(){
+    })   
+    $('.add-to-cart-btn').on('click',function(){
     
 
     let this_val = $(this)
@@ -180,12 +151,64 @@ $('.add-to-cart-btn').on('click',function(){
         success:function(response){
             this_val.html('✓')
             console.log(response.totalcaritems)
-            $('#cart-number').html(response.totalcaritems)
+            console.log(response.cart_data)
+            $('#cart-number').text(response.totalcaritems)
             console.log('Added to the cart');
         }
     
     })
+    })    
+    
+    $('#max_price').on('blur',function(){
+        let min_price = $(this).attr('min')
+        let max_price = $(this).attr('max')
+        let current_price = $(this).val()
+        console.log("Value is :",current_price);
+        console.log("Min price is :", min_price);
+        console.log("Max_price is :",max_price );
+        if(current_price < parseInt(min_price) || current_price > parseInt(max_price)){
+            console.log('Price Error Occurred!!');
+
+            min_price = Math.round(min_price * 100) / 100
+            max_price = Math.round(max_price * 100) / 100
+
+            console.log("Max Price is:", min_price)
+            console.log("Max Price is:", max_price)
+            alert("Price must between "+ min_price + 'and' + max_price)
+            $(this).val(min_price)
+            $("#range").val(min_price)
+
+            $(this).focus()
+
+
+            return false
+        }
+    })
+    $('.delete-product').on('click',function(){
+        let product_id = $(this).attr('data-product')
+        let this_val= $(this)
+
+        console.log('Product_id:',product_id)
+        $.ajax({
+            url:"/store/delete_from_cart/",
+            data:{
+                'id':product_id
+            },
+            datatype: "json",
+            beforeSend:function(){
+            console.log('Trying deleted product:',product_id)
+            },
+            success:function(response){
+                this_val.show()
+                $('#cart-number').text(response.totalcaritems)
+                $('#cart-list').html(response.data)
+            }
+        })
+    })
+
 })
+
+
 
 /*
 $('#add-to-cart-btn').on('click',function(e){

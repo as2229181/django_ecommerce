@@ -12,7 +12,9 @@
                 <th><h5>Items:<strong>{{totalcaritems}}</strong></h5></th>
                 <th><h5>Total:<strong>${{cart_total_account|floatformat:2}}</strong></h5></th>
                 <th>
+                    {% if totalcaritems %}
                     <a style="float:right;margin:5px;" class="btn btn-success"  href="{% url 'checkout' %}">Chechout</a>
+                    {% endif %}
                 </th>
             </tr>
         </table>
@@ -25,8 +27,10 @@
                 <div style="flex:1"><strong>Price</strong></div>
                 <div style="flex:1"><strong>Quantity</strong></div>
                 <div style="flex:1"><strong>Total</strong></div>
-            </div>  
-            {% for key,p in cart_data.items %}
+                <div><button type="hidden" class="trash-button-none"><i type="hidden" class="bi bi-trash"></i></button></div>
+            </div>
+            <span id="cart-list">
+            {% for product_id,p in cart_data.items %}
             <div class="cart-row">
                 <div style="flex:2"><img class="row-image" src="{{ p.product_image }}" ></div>
                 <div style="flex:2">{{ p.name }}</div>
@@ -38,8 +42,13 @@
                         <img data-product="{{item.product.id}}" data-action="remove" class="chg-quantity update-cart" src="{% static 'images/down icon.png' %}">
                     </div>
                 </div>
-                <div style="flex:1"><strong>{{ p.total_price }}</strong></div>
+                <div style="flex:1"><strong>{{ p.total_price }}</strong>                  
+                </div>
+                <div>
+                    <button class="trash-button delete-product" data-product="{{ product_id }}"><i class="bi bi-trash "></i></button>
+                </div>
             </div>
+            </span>  
             {% endfor %} 
         </div>
     </div>
