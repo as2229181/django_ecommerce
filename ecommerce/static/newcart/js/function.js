@@ -149,6 +149,7 @@ $(document).ready(function(){
             console.log('Adding the product to the cart!!');
         },
         success:function(response){
+            this_val.show()
             this_val.html('✓')
             console.log(response.totalcaritems)
             console.log(response.cart_data)
@@ -184,19 +185,22 @@ $(document).ready(function(){
             return false
         }
     })
-    $('.delete-product').on('click',function(){
+   
+    $('.update-product').on('click',function(){
         let product_id = $(this).attr('data-product')
+        let product_quantity = $('.product-quantity-'+ product_id)
         let this_val= $(this)
 
-        console.log('Product_id:',product_id)
+         console.log('Product_id:',product_id)
         $.ajax({
-            url:"/store/delete_from_cart/",
+            url:"/store/update_cart/",
             data:{
-                'id':product_id
+                'id':product_id,
+                'quantity':product_quantity
             },
             datatype: "json",
             beforeSend:function(){
-            console.log('Trying deleted product:',product_id)
+            console.log('Trying refresh product:',product_id)
             },
             success:function(response){
                 this_val.show()
@@ -205,7 +209,70 @@ $(document).ready(function(){
             }
         })
     })
+    $('.chg-quantity').on('click',function(){
+        let action = $(this).attr('data-action')
+        let product_id = $(this).attr('data-product')
+        
+        // if (action == 'add'){
+        //     cart_data_obj['product_id']['quantity']+=1
+        // }
+        // if(action=='remove'){
+        //     cart_data_obj[product_id]['quantity']-=1
+        //     if (cart_data_obj[product_id]['quantity']<=0){
+        //         delete cart_data_obj[product_id]
+        //         console.log('remove product')    
+        //     }
+        // }
+        // let price = cart_data_obj[product_id]['quantity']*cart_data_obj['price']
+        // let quantity = cart_data_obj[product_id]['quantity']
+        // $('#producttotalprice').text(price)
+        // $('#productquantity').text(quantity)
+        $.ajax({
+            url:"/store/change_cart_quantity/",
+            data:{
+                'id':product_id,
+                'action':action
+            },
+            datatype: "json",
+            beforeSend:function(){
+            console.log('change product item')
+            },
+            success:function(response){
+                $('#cart-totalcartitems').text(response.totalcaritems)
+                $('.product-quantity-'+product_id).text(response.quantity)
+                $('.product-price-'+product_id).text(response.product_sum)
+                $('#totalcartprice').text(response.cart_total_amount)
+            }
+        })  
+    })
+})
 
+$(document).on('click','.delete-product',function(){  
+    
+    let product_id = $(this).attr('data-product')
+    let this_val= $(this)
+
+    console.log('Product_id:',product_id)
+    $.ajax({
+        url:"/store/delete_from_cart/",
+        data:{
+            'id':product_id
+        },
+        datatype: "json",
+        beforeSend:function(){
+        console.log('Trying deleted product:',product_id)
+        },
+        success:function(response){
+            this_val.show()
+            $('#cart-number').text(response.totalcaritems)
+            $('.cart_list').html(response.data)
+            $('#cart-totalcartitems').text(response.totalcaritems)
+            $('.product-quantity-'+product_id).text(response.quantity)
+            $('.product-price-'+product_id).text(response.product_sum)
+            $('#totalcartprice').text(response.cart_total_amount)
+        }
+    
+})
 })
 
 

@@ -31,5 +31,8 @@ urlpatterns=[
     path('add_to_cart/',views.add_to_cart,name='add_to_cart'),
     path('cart_view/',views.cart_view,name='cart'),
     path('delete_from_cart/',views.delete_from_cart,name='delete_from_cart'),
+    path('update_cart/',views.update_cart,name='update_cart'),
+    path('change_cart_quantity/',views.change_cart_quantity,name='change_cart_quantity'),
+    path('checkout_view/',views.checkout_view,name='checkout_view'),
     ]
 

@@ -384,7 +384,7 @@ def cart_view(request):
         return render(request,'new cart/Cart.html',context)
     else:
         messages.warning(request,'Your cart is empty!!')
-        print(' not in')
+        print('not in')
         return  redirect("test4")
     
 
@@ -400,6 +400,55 @@ def delete_from_cart(request):
     cart_total_amount = 0
     if 'cart_data_obj' in request.session:
         for p_id, item in request.session['cart_data_obj'].items():
+            cart_total_amount += int(item['quantity'])*float(item['price'])
+            cart_total_amount = round(cart_total_amount, 2)   
+    context= render_to_string('new cart/async/cart-list.html',{'cart_data':request.session['cart_data_obj'],'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount})           
+    return JsonResponse({'data':context,'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount})
+
+
+def update_cart(request):
+    product_id=str(request.GET['id'])
+    product_quantity = request.GET['quantity']
+    if 'cart_data_obj' in request.session:
+        if product_id in request.session['cart_data_obj']:
+            cart_data=request.session['cart_data_obj']
+            cart_data[str(request.GET['id'])]['quantity']=product_quantity
+            request.session['cart_product_obj'] =cart_data
+    cart_total_amount = 0
+    if 'cart_data_obj' in request.session:
+        for p_id, item in request.session['cart_data_obj'].items():
             cart_total_amount += int(item['quantity'])*float(item['price'])  
     context= render_to_string('new cart/async/cart-list.html',{'cart_data':request.session['cart_data_obj'],'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount})           
     return JsonResponse({'data':context,'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount})
+
+
+def change_cart_quantity(request):
+    product_id=str(request.GET['id'])
+    action= str(request.GET['action'])    
+    cart_data=request.session['cart_data_obj']
+    quantity=int(cart_data[product_id]['quantity'])
+    if 'cart_data_obj'in request.session:
+        if action == 'add':
+            quantity+=1
+            cart_data[product_id]['quantity']=str(quantity)
+            product_sum = round(int(cart_data[product_id]['quantity'])*float(cart_data[product_id]['price']), 2)                      
+        if action == 'remove':
+            quantity-=1
+            cart_data[product_id]['quantity']=str(quantity)
+            product_sum = round(int(cart_data[product_id]['quantity'])*float(cart_data[product_id]['price']), 2)  
+            if  quantity<=0:
+                del cart_data[product_id]    
+    request.session['cart_product_obj'] =cart_data
+    request.session.modified = True  # 更新 session 中的資料
+    request.session.save()  # 儲存 session 變更  
+    cart_total_amount = 0
+    if 'cart_data_obj' in request.session:
+        for p_id, item in request.session['cart_data_obj'].items():
+            cart_total_amount += int(item['quantity'])*float(item['price'])
+            cart_total_amount = round(cart_total_amount, 2)   
+    context= render_to_string('new cart/async/cart-list.html',{'cart_data':request.session['cart_data_obj'],'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount})
+    return JsonResponse({'data':context,'quantity':quantity,'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount,'product_sum':product_sum})
+
+
+def checkout_view(request):
+    return render(request,'new cart/checkout.html')

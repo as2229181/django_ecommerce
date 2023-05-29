@@ -314,6 +314,13 @@ body{margin-top:20px;
         color: rgb(40, 125, 139); /* 修改顏色為你想要的顏色 */
         cursor: pointer;
       }
+
+.refresh-button {
+        border: none;
+        background-color: transparent;
+        color: rgb(40, 125, 139); /* 修改顏色為你想要的顏色 */
+        cursor: pointer;
+      }      
 .trash-button-none {
         pointer-events: none;
         border: none;
@@ -321,3 +328,10 @@ body{margin-top:20px;
         color: #FFFFFF; /* 修改顏色為你想要的顏色 */
         cursor: pointer;
       }
+.refresh-button-none {
+    pointer-events: none;
+    border: none;
+    background-color: transparent;
+    color: #FFFFFF; /* 修改顏色為你想要的顏色 */
+    cursor: pointer;
+  }     
