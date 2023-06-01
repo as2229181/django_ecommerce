@@ -34,5 +34,15 @@ urlpatterns=[
     path('update_cart/',views.update_cart,name='update_cart'),
     path('change_cart_quantity/',views.change_cart_quantity,name='change_cart_quantity'),
     path('checkout_view/',views.checkout_view,name='checkout_view'),
+    path('ecpay_view/',views.ecpay_view,name='ecpay'),
+
+    #paypal
+    path('paypal/',include('paypal.standard.ipn.urls')),
+    
+    # paypal complete 
+    path('paypal_compeleted_view/',views.paypal_compeleted_view,name='paypal_compeleted_view'),
+    # paypal failed
+    path('paypal_failed_view/',views.paypal_failed_view,name='paypal_failed_view'),
+
     ]
 

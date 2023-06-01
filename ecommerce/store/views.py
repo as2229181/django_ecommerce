@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 from .models import*
 import json
 import datetime
@@ -7,12 +7,17 @@ from .utils import cookeieCart,cartData,guestOrder
 from .form import UserRegisterForm,ProductReviewForm
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout,get_user_model
+from django.contrib.auth.decorators import login_required
 from django.db.models import Count,Avg
 from  taggit.models import Tag
 from django.db.models import Q
 from django.template.loader import render_to_string  
 import logging
-
+from .sample_create_order_ALL import main
+from django.views.decorators.csrf import csrf_exempt
+from django.urls import reverse
+from django.conf import settings
+from paypal.standard.forms import PayPalPaymentsForm
 
 '''
 Setting logger in views.py
@@ -449,6 +454,36 @@ def change_cart_quantity(request):
     context= render_to_string('new cart/async/cart-list.html',{'cart_data':request.session['cart_data_obj'],'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount})
     return JsonResponse({'data':context,'quantity':quantity,'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount,'product_sum':product_sum})
 
-
+@login_required
 def checkout_view(request):
-    return render(request,'new cart/checkout.html')
+     host=request.get_host()
+     paypal_dict={
+         'business':settings.PAYPAL_RECEIVER_EMAIL,
+         'amount':200,
+         'item_name':'Order-Item-NO-3',
+         'currency_code':'USD',
+         'notify_url':'http://{}{}'.format(host,reverse('paypal-ipn')),
+         'return_url':'http://{}{}'.format(host,reverse('paypal_compeleted_view')),
+         'cancel_url':'http://{}{}'.format(host,reverse('paypal_failed_view'))
+     }
+     paypal__payment_button = PayPalPaymentsForm(initial=paypal_dict)
+     cart_total_amount=0
+     if 'cart_data_obj'in request.session:
+        for p_id, item in request.session['cart_data_obj'].items():
+            cart_total_amount += int(item['quantity'])*float(item['price'])
+            cart_total_amount = round(cart_total_amount, 2)
+                  
+        return render(request,'new cart/checkout.html',{'cart_data':request.session['cart_data_obj'],'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount,'paypal__payment_button':paypal__payment_button})
+
+@csrf_exempt
+def ecpay_view(request):
+    return HttpResponse(main()) 
+
+
+
+def paypal_compeleted_view(request):
+    return render(request,'new cart/payapl-completed.html')
+
+
+def paypal_failed_view(request):
+    return render(request,'new cart/paypal-failed.html')

@@ -1,0 +1,59 @@
+{% extends 'new cart/root.html' %}
+{% block content %}
+{% load static %}
+<div class="col-12">
+        <div class="bg-light rounded h-100 p-4">
+            <h6 class="mb-4">帳單</h6>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">NO.</th>
+                            <th scope="col">Product name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Account</th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>John</td>
+                            <td>Doe</td>
+                            <td>jhon@email.com</td>
+                            <td>USA</td>
+                            
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>mark@email.com</td>
+                            <td>UK</td>
+                            
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>jacob@email.com</td>
+                            <td>AU</td>
+                            
+                        </tr>
+                        <thead>       
+                        <tr class="border-bottom">
+                                <th scope="row"></th>
+                                <td></td>
+                                <td></td>
+                                <td >Total</td>
+                                <td ">xxx</td>    
+                        </tr>
+                        </thead>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock  %}

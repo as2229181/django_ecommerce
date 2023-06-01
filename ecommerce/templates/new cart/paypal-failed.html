@@ -1,0 +1,21 @@
+{% extends 'new cart/root.html' %}
+{% block content %}
+{% load static %}
+<div class="d-flex align-items-center justify-content-center vh-100">
+        <div class="text-center row">
+            <div class=" col-md-6">
+                <img src="{% static 'images/Lovepik_com-401186391-red-fork-small-icon.png' %}" alt=""
+                    class="img-fluid">
+            </div>
+            <div class=" col-md-6 mt-5">
+                <p class="fs-3"> <span class="text-danger">Opps!</span> Payment failed</p>
+                <p class="lead">
+                    Please try again later.
+                </p>
+                <a href="{% url 'test4' %}" class="btn btn-primary">Go Home</a>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock  %}

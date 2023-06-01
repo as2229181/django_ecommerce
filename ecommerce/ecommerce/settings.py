@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'store.apps.StoreConfig',
     'taggit',
     'ckeditor',
-    'ckeditor_uploader'
+    'ckeditor_uploader',
+    'paypal.standard.ipn'
    
 ]
 
@@ -204,3 +205,9 @@ LOGGING={
 
     }
 }
+
+
+LOGIN_URL='login'
+
+PAYPAL_RECEIVER_EMAIL ='sb-nc43jj25477739@business.example.com'
+PAYPAL_TEST = True

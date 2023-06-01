@@ -8,3 +8,4 @@ django-widget-tweaks==1.4.12
 mysqlclient==1.4.6
 Pillow==9.5.0
 shortuuid==1.0.11
+django-paypal==2.0
