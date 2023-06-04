@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'taggit',
     'ckeditor',
     'ckeditor_uploader',
-    'paypal.standard.ipn'
+    'paypal.standard.ipn',
+    
    
 ]
 
@@ -211,3 +212,12 @@ LOGIN_URL='login'
 
 PAYPAL_RECEIVER_EMAIL ='sb-nc43jj25477739@business.example.com'
 PAYPAL_TEST = True
+
+#wkhtmltopdf
+WKHTMLTOPDF_CMD_OPTIONS = {
+    'quiet': True,
+    'encoding': 'utf-8',
+    'disable-smart-shrinking': True,
+    # 設置正確的路徑
+    'path': 'C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe',  # 根據你的安裝路徑進行設置
+}

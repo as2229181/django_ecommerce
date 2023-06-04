@@ -18,6 +18,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 from django.conf import settings
 from paypal.standard.forms import PayPalPaymentsForm
+import pdfkit
+from django.http import FileResponse
 
 '''
 Setting logger in views.py
@@ -457,6 +459,7 @@ def change_cart_quantity(request):
 @login_required
 def checkout_view(request):
      host=request.get_host()
+     print(host)
      paypal_dict={
          'business':settings.PAYPAL_RECEIVER_EMAIL,
          'amount':200,
@@ -482,8 +485,31 @@ def ecpay_view(request):
 
 
 def paypal_compeleted_view(request):
-    return render(request,'new cart/payapl-completed.html')
+    cart_total_amount=0
+    if 'cart_data_obj'in request.session:
+        for p_id, item in request.session['cart_data_obj'].items():
+            cart_total_amount += int(item['quantity'])*float(item['price'])
+            cart_total_amount = round(cart_total_amount, 2)
+    return render(request,'new cart/payapl-completed.html',{'cart_data':request.session['cart_data_obj'],'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount })
 
 
 def paypal_failed_view(request):
     return render(request,'new cart/paypal-failed.html')
+
+
+# def pdf_generate(request):
+#     username=request.user.username
+        
+#     html_content =request.GET['pdf_content']
+#     print(html_content)
+#     options = {
+#         'encoding': 'UTF-8',
+#         'no-outline': None,
+        
+#     }
+#     pdf = pdfkit.from_string(html_content, False,configuration=pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe'),options=options)
+#     print(pdf)
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = f'attachment; filename="{username}.pdf"'
+#     response.write(pdf)
+#     return response

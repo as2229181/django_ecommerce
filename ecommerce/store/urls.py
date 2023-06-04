@@ -44,5 +44,7 @@ urlpatterns=[
     # paypal failed
     path('paypal_failed_view/',views.paypal_failed_view,name='paypal_failed_view'),
 
+    # pdf generate 
+    # path('pdf_generate/',views.pdf_generate,name='pdf_generate'),
     ]
 

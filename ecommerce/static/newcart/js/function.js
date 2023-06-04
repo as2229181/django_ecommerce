@@ -245,6 +245,28 @@ $(document).ready(function(){
             }
         })  
     })
+    // $('.pdf-but').on('click',function(){
+    //     let pdf_content = document.querySelector('.pdf-content').innerHTML;
+    //     $.ajax({
+    //         url:"/store/pdf_generate/",
+    //         data:{
+    //             'pdf_content':pdf_content,
+    //         },
+    //         datatype: "json",
+    //         success:function(response){
+    //             let blob = new Blob([response], { type: 'application/pdf' });
+    //             let url = window.URL.createObjectURL(blob);
+    //             let a = document.createElement('a');
+    //             a.href = url;
+    //             a.download = 'filename.pdf';
+    //             document.body.appendChild(a);
+    //             a.click();
+    //             document.body.removeChild(a);
+    //             window.URL.revokeObjectURL(url);
+    //         }
+
+    //     })  
+    // })
 })
 
 $(document).on('click','.delete-product',function(){  
