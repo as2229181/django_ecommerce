@@ -4,6 +4,10 @@
 <div class="col-12">
         <div class="bg-light rounded h-100 p-4">
             <h6 class="mb-4">帳單</h6>
+            <div class="d-flex justify-content">                
+                <h6 class="mb-4"style=" margin-right: 5px;font-weight: bold; ">用戶:</h6>
+                <h6 class="mb-4"style=" font-weight: bold;">{{ request.user.username }}</h6>
+            </div>
             <div class="table-responsive">
                 <table class="table">
                     <thead>
@@ -17,37 +21,23 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for id,p in cart_data.items %}
                         <tr>
-                            <th scope="row">1</th>
-                            <td>John</td>
-                            <td>Doe</td>
-                            <td>jhon@email.com</td>
-                            <td>USA</td>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{ p.name }}</td>
+                            <td>{{p.price}}</td>
+                            <td>{{p.quantity}}</td>
+                            <td>{{p.total_price}}</td>
                             
                         </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>mark@email.com</td>
-                            <td>UK</td>
-                            
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>jacob@email.com</td>
-                            <td>AU</td>
-                            
-                        </tr>
+                        {% endfor %}
                         <thead>       
                         <tr class="border-bottom">
                                 <th scope="row"></th>
                                 <td></td>
                                 <td></td>
                                 <td >Total</td>
-                                <td ">xxx</td>    
+                                <td >${{cart_total_amount}}</td>    
                         </tr>
                         </thead>
                     </tbody>
