@@ -26,7 +26,8 @@ class VendorAdmin(admin.ModelAdmin):
     list_display=['title','Vendor_image']
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display=['customer','date_order','paid_status','complete','transaction_id']
+    list_editable=['paid_status','product_status']
+    list_display=['customer','date_order','paid_status','complete','transaction_id','product_status','get_cart_total']
 
 class OrderItemAdmin(admin.ModelAdmin):
     list_display=['product','product_status','quantity','date_added','get_total']
