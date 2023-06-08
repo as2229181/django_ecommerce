@@ -1,7 +1,7 @@
 {% extends 'new cart/root.html' %}
 {% block content %}
 {% load static %}
-<div class="col-12">
+<!-- <div class="col-12">
         <div class="bg-light rounded h-100 p-4 pdf-content">
             <h6 class="mb-4">帳單</h6>
             <div class="d-flex justify-content">                
@@ -37,11 +37,9 @@
                                 <td></td>
                                 <td></td>
                                 <td >Total</td>
-<<<<<<< HEAD
-                                <td ">{{cart_total_amount}}</td>    
-=======
+
                                 <td >${{cart_total_amount}}</td>    
->>>>>>> models_modify
+
                         </tr>
                         </thead>
 
@@ -50,5 +48,116 @@
             </div>
         </div>
     </div>
-    <button class="btn btn-success text-white mt-2 pdf-but " >Download</button>
-{% endblock  %}
+    <button class="btn btn-success text-white mt-2 pdf-but " >Download</button>-->
+    <header>
+    
+    <!-- <div class="row">
+        <div class="col-md-12">
+            <div class="invoice-title ">
+                <div><img src="img/logo.png" alt=""> <p class="pull-right mt-3">Order # 12345</p></div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <address>
+                    <strong>Billed To:</strong><br>
+                        John Smith<br>
+                        1234 Main<br>
+                        Apt. 4B<br>
+                        Springfield, ST 54321
+                    </address>
+                </div>
+                <div class="col-md-6 text-right">
+                    <address>
+                    <strong>Shipped To:</strong><br>
+                        Jane Smith<br>
+                        1234 Main<br>
+                        Apt. 4B<br>
+                        Springfield, ST 54321
+                    </address>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <address>
+                        <strong>Payment Method:</strong><br>
+                        Visa ending **** 4242<br>
+                        jsmith@email.com
+                    </address>
+                </div>
+                <div class="col-md-6 text-right">
+                    <address>
+                        <div><p class="mb-0">Order Date : March 7, 2018</p>
+                        <p>Term : Due on Receipt</p></div><br>
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>  -->
+    
+     
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>訂單資訊</strong></h3>
+                    <div class="d-flex justify-content">                
+                        <h6 class="panel-title"style=" margin-right: 5px;font-weight: bold; ">用戶:</h6>
+                        <h6 class="panel-title"style=" font-weight: bold;">{{ request.user.username }}</h6>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table borderless">
+                            <thead>
+                                <tr class="bg-info text-white">
+                                    <td><strong>商品</strong></td>
+                                    <td class="text-center"><strong>價錢</strong></td>
+                                    <td class="text-center"><strong>數量</strong></td>
+                                    <td class="text-right"><strong>總價</strong></td>
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                {% for id,p in cart_data.items %}
+                                <tr>
+                                    <td>{{ p.name }}</td>
+                                    <td class="text-center">${{p.price}}</td>
+                                    <td class="text-center">{{p.price}}</td>
+                                    <td class="text-right">${{p.total_price}}</td>
+                                {% endfor %}
+                                <tr>
+                                    <td class="thick-line"></td>
+                                    <td class="thick-line"></td>
+                                    <td class="thick-line text-center"><strong>Subtotal</strong></td>
+                                    <td class="thick-line text-right">${{cart_total_amount}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="no-line"></td>
+                                    <td class="no-line"></td>
+                                    <td class="no-line text-center"><strong>Shipping</strong></td>
+                                    <td class="no-line text-right">$15</td>
+                                </tr>
+                                <tr>
+                                    <td class="no-line"></td>
+                                    <td class="no-line"></td>
+                                    <td class="no-line text-center"><strong>Total</strong></td>
+                                    <td class="no-line text-right">$685.99</td>
+                                </tr>
+                            </tbody> 
+                        </table>
+                        <!-- <div class="text-right">
+                            <a class="btn btn-general btn-blue mr-3" href="invoice-page.html" target="_empty"><i class="fa fa-print"></i> Go Print</a>
+                            <button class="btn btn-general btn-white">Submit The Invoice</button>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div> 
+</header>
+
+
+    {% endblock  %}

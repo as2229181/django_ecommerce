@@ -110,7 +110,7 @@ class Customer(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE,null=True,blank=True)
     name=models.CharField(max_length=200,null=True)
     email=models.CharField(max_length=200,null=True)
-    
+    contact=models.CharField(max_length=100,default='+886 0912768057')
     def __str__(self):
         return self.name or ''
 
@@ -180,7 +180,7 @@ class ProductImages(models.Model):
 
 ################################## Cart,OrderItems,Address#################################
 class Order(models.Model):
-    customer=models.ForeignKey(Customer,on_delete=models.SET_NULL,blank=True,null=True)
+    customer=models.ForeignKey(Customer,on_delete=models.SET_NULL,blank=True,null=True,related_name='customer_order')
     date_order=models.DateField(auto_now_add=True)
     paid_status=models.BooleanField(default=False)
     complete=models.BooleanField(default=False,null=True,blank=False)

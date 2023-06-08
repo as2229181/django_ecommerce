@@ -31,7 +31,29 @@
     <link rel="stylesheet" href="{% static 'newcart/css/fontawesome.min.css' %}">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
-<!--
+    <style>
+        header { 
+         @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
+    
+        @import url('{% static 'dashboard/css/bootstrap.min.css' %}');
+        @import url('{% static 'dashboard/font-awesome-4.7.0/css/font-awesome.min.css' %}');
+    
+        @import url('{% static 'dashboard/css/font-icon-style.css' %}');
+        @import url('{% static 'dashboard/css/style.default.css' %}');
+        @import url('{% static 'dashboard/css/bootstrap.min.css' %}');
+    
+        /* Core stylesheets */
+        @import url('{% static 'dashboard/css/apps/invoice.css' %}');
+        @import url('{% static 'dashboard/css/apps/email.css' %}');
+        @import url('{% static 'dashboard/css/apps/media.css' %}');
+        @import url('{% static 'dashboard/css/apps/calendar.css' %}');
+         }
+    </style>
+    
+
+    <!--
+
+    
     
     
 TemplateMo 559 Zay Shop
@@ -68,7 +90,7 @@ https://templatemo.com/tm-559-zay-shop
     <nav class="navbar navbar-expand-lg navbar-light shadow">
         <div class="container d-flex justify-content-between align-items-center">
 
-            <a class="navbar-brand text-success logo h1 align-self-center" href="index.html">
+            <a class="navbar-brand text-success logo h1 align-self-center" href="{% url 'test4' %}">
                 Zay
             </a>
 
@@ -80,14 +102,14 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="flex-fill">
                     <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html">Home</a>
+                            <a class="nav-link" href="{% url 'test2' %}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="about.html">About</a>
+                            <a class="nav-link" href="{% url 'test4' %}">Store</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Shop
+                            <a class="nav-link dropdown-toggle" href="{% url 'test4' %}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Category
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                               {% for c in categories %}
@@ -96,7 +118,7 @@ https://templatemo.com/tm-559-zay-shop
                             </div>
                           </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact</a>
+                            <a class="nav-link" href="{% url 'customer_view' %}">Dashboard</a>
                         </li>
                     </ul>
                 </div>
@@ -138,6 +160,7 @@ https://templatemo.com/tm-559-zay-shop
     </nav>
     <!-- Close Header -->
     <!--filter start-->
+    {% if filter == True %}
     <div style="margin-bottom: 50px;"></div>
     <div class="card">
         <div class="card-header" id="filter-header">
@@ -305,6 +328,8 @@ https://templatemo.com/tm-559-zay-shop
         </div> 
         </div>
         </div>
+        {% else %}
+        {% endif %}
         <!--container end.//-->
     <!--filter close-->
     <!-- Modal -->

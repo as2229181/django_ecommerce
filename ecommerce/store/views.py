@@ -219,7 +219,7 @@ def test4(request):
     
     
    
-    
+    filter=True
     products=Product.objects.all()
     context={'word':'this is  store page',
              'Products':products,
@@ -227,28 +227,30 @@ def test4(request):
              
              'category':category}
     context={
-        'products':product
+        'products':product,
+        'filter':filter,
         
     }
     return render(request,'new cart/shop.html',context)
 def test5(request, cid):
+    filter=False
     category=Category.objects.get(cid=cid)
     product=Product.objects.filter(category=category)
     context={
         'category':category,
-        'product':product
-        
+        'product':product,
+        'filter':  filter
     }
     return render(request,'new cart/category.html',context)
 
-def cutsomer_view(request):
+def vendor_view(request):
     vendor=Vendor.objects.all()
     context={
         'vendor':vendor
     }
     return render(request,'new cart/vendor.html',context)
 
-def cutsomer_dashboard(request,vid):
+def vender_detail(request,vid):
     vendor=Vendor.objects.get(vid=vid)
     products=Product.objects.filter(vendor=vendor)
     # category=Category.objects.filter(vendor=vendor)
@@ -260,6 +262,23 @@ def cutsomer_dashboard(request,vid):
     }
     return render(request,'new cart/vendor-detail.html',context)
 
+
+def customer_view(request):
+    customers=Customer.objects.all()
+    context={
+        'customers':customers
+    }
+    return render(request,'new cart/customer.html',context)
+
+def customer_detail(request,c_id):
+    customer=Customer.objects.get(id=c_id)
+    orders=Order.objects.filter(customer=customer).all().order_by('-date_order')
+    context={
+        'customer':customer,
+        'orders':orders
+    }
+    return render(request,'new cart/customer_detail.html',context)
+ 
 
 def test8(request,tag_slug=None):
     products=Product.objects.filter(product_status='published').order_by('-date')
@@ -457,10 +476,10 @@ def change_cart_quantity(request):
 
 @login_required
 def checkout_view(request):
-<<<<<<< HEAD
-     host=request.get_host()
-     print(host)
-     paypal_dict={
+
+    host=request.get_host()
+    print(host)
+    paypal_dict={
          'business':settings.PAYPAL_RECEIVER_EMAIL,
          'amount':200,
          'item_name':'Order-Item-NO-3',
@@ -469,37 +488,37 @@ def checkout_view(request):
          'return_url':'http://{}{}'.format(host,reverse('paypal_compeleted_view')),
          'cancel_url':'http://{}{}'.format(host,reverse('paypal_failed_view'))
      }
-     paypal__payment_button = PayPalPaymentsForm(initial=paypal_dict)
-     cart_total_amount=0
-     if 'cart_data_obj'in request.session:
-=======
-    host=request.get_host()
+    paypal__payment_button = PayPalPaymentsForm(initial=paypal_dict)
     cart_total_amount=0
-    total_price= 0
-    transaction_id=datetime.datetime.now().timestamp()
-    print(transaction_id)
-    #create customer
-    customer,created = Customer.objects.get_or_create(user=request.user,name=request.user.username,email=request.user.email)
-    #create order
-    order=Order.objects.create(
-        customer=customer,
-        transaction_id=str(transaction_id)   
-    )
     if 'cart_data_obj'in request.session:
->>>>>>> models_modify
-        for p_id, item in request.session['cart_data_obj'].items():
-            total_price += int(item['quantity'])*float(item['price'])
-            total_price = round(total_price, 2)  
-            cart_total_amount += int(item['quantity'])*float(item['price'])
-            cart_total_amount = round(cart_total_amount, 2)        
-        #create cart order item       
-            product=Product.objects.get(id=p_id)
-            OrderItem.objects.create(
-                product=product,
-                order=order,
-                quantity=request.session['cart_data_obj'][p_id]['quantity'],
-                total=total_price
-            )           
+
+        host=request.get_host()
+        cart_total_amount=0
+        total_price= 0
+        transaction_id=datetime.datetime.now().timestamp()
+        print(transaction_id)
+        #create customer
+        customer,created = Customer.objects.get_or_create(user=request.user,name=request.user.username,email=request.user.email)
+        #create order
+        order=Order.objects.create(
+            customer=customer,
+            transaction_id=str(transaction_id)   
+        )
+        if 'cart_data_obj'in request.session:
+
+            for p_id, item in request.session['cart_data_obj'].items():
+                total_price += int(item['quantity'])*float(item['price'])
+                total_price = round(total_price, 2)  
+                cart_total_amount += int(item['quantity'])*float(item['price'])
+                cart_total_amount = round(cart_total_amount, 2)        
+            #create cart order item       
+                product=Product.objects.get(id=p_id)
+                OrderItem.objects.create(
+                    product=product,
+                    order=order,
+                    quantity=request.session['cart_data_obj'][p_id]['quantity'],
+                    total=total_price
+                )           
         paypal_dict={
             'business':settings.PAYPAL_RECEIVER_EMAIL,
             'amount':cart_total_amount,
@@ -520,28 +539,29 @@ def ecpay_view(request):
 
 
 
-<<<<<<< HEAD
+
 def paypal_compeleted_view(request):
     cart_total_amount=0
-=======
+
 def paypal_compeleted_view(request):   
     cart_total_amount=0
     cart_data=request.session['cart_data_obj']
->>>>>>> models_modify
+
     if 'cart_data_obj'in request.session:
         for p_id, item in request.session['cart_data_obj'].items():
             cart_total_amount += int(item['quantity'])*float(item['price'])
             cart_total_amount = round(cart_total_amount, 2)
-<<<<<<< HEAD
-    return render(request,'new cart/payapl-completed.html',{'cart_data':request.session['cart_data_obj'],'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount })
-=======
+        
+        return render(request,'new cart/payapl-completed.html',{'cart_data':request.session['cart_data_obj'],'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount })
     del request.session['cart_data_obj']
+    
     return render(request,'new cart/payapl-completed.html',{'cart_data':cart_data,'totalcartitems':len(cart_data),'cart_total_amount':cart_total_amount })
->>>>>>> models_modify
+
 
 
 def paypal_failed_view(request):
     return render(request,'new cart/paypal-failed.html')
+
 
 
 # def pdf_generate(request):
@@ -559,10 +579,14 @@ def paypal_failed_view(request):
 #     response = HttpResponse(content_type='application/pdf')
 #     response['Content-Disposition'] = f'attachment; filename="{username}.pdf"'
 #     response.write(pdf)
-<<<<<<< HEAD
-#     return response
-=======
+
 #     return response
 
+def order_detail(request,o_id):
+    order=Order.objects.get(id=o_id)
+    orderitem= OrderItem.objects.filter(order=order).all()
+    context={
+        'orderitem':orderitem
+    }
 
->>>>>>> models_modify
+    return  render(request,'new cart/order_detail.html',context)

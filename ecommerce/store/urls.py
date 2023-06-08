@@ -22,8 +22,8 @@ urlpatterns=[
     path('test3/<sui>',views.test3,name='test3'),
     path('test4/',views.test4,name='test4'),
     path('test5/<cid>/',views.test5,name='test5'),
-    path('cutsomer_view',views.cutsomer_view,name='cutsomer_view'),
-    path('cutsomer_dashboard/<vid>/',views.cutsomer_dashboard,name='cutsomer_dashboard'),
+    path('vendor_view',views.vendor_view,name='vendor_view'),
+    path('vender_detail/<vid>/',views.vender_detail,name='vender_detail'),
     path('test8/<slug:tag_slug>/',views.test8,name='test8'),
     path('ajax_add_review/<sui>',views.ajax_add_review,name='ajax_add_review'),
     path('search',views.search_view,name='search'),
@@ -35,7 +35,9 @@ urlpatterns=[
     path('change_cart_quantity/',views.change_cart_quantity,name='change_cart_quantity'),
     path('checkout_view/',views.checkout_view,name='checkout_view'),
     path('ecpay_view/',views.ecpay_view,name='ecpay'),
-
+    #customer dashboard
+    path('customer_view/',views.customer_view,name='customer_view'),
+    path('customer_detail/<int:c_id>',views.customer_detail,name='customer_detail'),
     #paypal
     path('paypal/',include('paypal.standard.ipn.urls')),
     
@@ -43,7 +45,8 @@ urlpatterns=[
     path('paypal_compeleted_view/',views.paypal_compeleted_view,name='paypal_compeleted_view'),
     # paypal failed
     path('paypal_failed_view/',views.paypal_failed_view,name='paypal_failed_view'),
-
+    
+    path('order_detail/<o_id>',views.order_detail,name='order_detail'),
     # pdf generate 
     # path('pdf_generate/',views.pdf_generate,name='pdf_generate'),
     ]
