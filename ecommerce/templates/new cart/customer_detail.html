@@ -41,7 +41,7 @@
                                                     <a class="navbar-brand text-dark logo h1 align-self-center">
                                                         Customer:
                                                     </a>
-                                                    <a class="navbar-brand text-dark logo h1 align-self-center" href="index.html">
+                                                    <a class="navbar-brand text-dark logo h1 align-self-center" >
                                                     {{customer.name}}
                                                     </a>
                                                 </li>
@@ -110,7 +110,7 @@
                                                   <h6 class="mb-0">Full Name</h6>
                                                 </div>
                                                 <div class="col-sm-9 text-secondary">
-                                                  Kenneth Valdez
+                                                  {{customer.name}}
                                                 </div>
                                               </div>
                                               <hr>
@@ -119,7 +119,7 @@
                                                   <h6 class="mb-0">Email</h6>
                                                 </div>
                                                 <div class="col-sm-9 text-secondary">
-                                                  fip@jukmuh.al
+                                                  {{customer.email}}
                                                 </div>
                                               </div>
                                               <hr>
@@ -128,7 +128,7 @@
                                                   <h6 class="mb-0">Phone</h6>
                                                 </div>
                                                 <div class="col-sm-9 text-secondary">
-                                                  (239) 816-9029
+                                                  {{customer.contact}}
                                                 </div>
                                               </div>
                                               <hr>
@@ -137,18 +137,70 @@
                                                   <h6 class="mb-0">Mobile</h6>
                                                 </div>
                                                 <div class="col-sm-9 text-secondary">
-                                                  (320) 380-4539
+                                                  {{customer.contact}}
                                                 </div>
                                               </div>
                                               <hr>
                                               <div class="row">
                                                 <div class="col-sm-3">
-                                                  <h6 class="mb-0">Address</h6>
+                                                  <h6 class="mb-0">Shipping Address</h6>
                                                 </div>
                                                 <div class="col-sm-9 text-secondary">
-                                                  Bay Area, San Francisco, CA
+                                                  {{ address_now.zipcode }},{{ address_now.state }},{{ address_now.city }},{{address_now.address}}
                                                 </div>
                                               </div>
+                                              <hr>
+                                              <div class="row">
+                                                <div class="col-sm-3">
+                                                  <h6 class="mb-0">Add Billing Address</h6>
+                                                </div>
+                                                <div class="col-sm-9 text-secondary d-flex align-items-center">
+                                                  <form action="{% url 'customer_detail' customer.id %}" id="form" method="POST">{% csrf_token %}
+                                                    <div id="shipping-info">
+                                                       
+                                                        <p>Shipping Information:</p>
+                                                        <hr>
+                                                        <div class="form-field">
+                                                            <input class="form-control" type="text" name="address" placeholder="Address.." required >
+                                                        </div>
+                                                        <div class="form-field">
+                                                            <input class="form-control" type="text" name="city" placeholder="City.."required >
+                                                        </div>
+                                                        <div class="form-field">
+                                                            <input class="form-control" type="text" name="state" placeholder="State..">
+                                                        </div>
+                                                        <div class="form-field">
+                                                            <input class="form-control" type="text" name="zipcode" placeholder="Zip code.."required >
+                                                        </div>
+                                                        <div class="form-field">
+                                                            <input class="form-control" type="text" name="country" placeholder="Country.."required >
+                                                        </div>
+                                                    </div>
+                                                  <button class="btn btn-success  ml-3" > Save Change</button>
+                                                  </form>
+                                                </div>                              
+                                              </div>
+                                              <hr>
+                                              {% for a in addresses %}
+                                              <div class="row">
+                                                <div class="col-sm-3">
+                                                  <h6 class="mb-0">Billing Address {{forloop.counter}}.</h6>
+                                                </div>
+                                                <div class="col-sm-9 text-secondary d-flex justify-content-between">
+                                                  <address>{{ a.zipcode }},{{ a.state }},{{ a.country }},{{ a.city }},{{a.address}}</address>
+                                                  <div class="ml-auto">
+                                                    {% if a.status %}
+                                                   
+                                                    <button data-address-id='{{a.id}}' style="display: none;" class="btn btn-success make-default-address button{{a.id}} action_btn">Make default</button>
+                                                    <i  data-address-id='{{a.id}}' class="bi bi-check-circle  text-success check{{a.id}}  check"></i>
+                                                    {% else %}
+                                                    <button data-address-id='{{a.id}}' class="btn btn-success make-default-address button{{a.id}} action_btn " >Make default</button>
+                                                    <i  data-address-id='{{a.id}}' style="display: none;" class="bi bi-check-circle text-success check{{a.id}} check "></i>
+                                                    {% endif %}
+                                                </div> 
+                                                </div>                              
+                                              </div>
+                                              {% endfor %}
                                               <hr>
                                               <div class="row">
                                                 <div class="col-sm-12">

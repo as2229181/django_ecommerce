@@ -49,5 +49,13 @@ urlpatterns=[
     path('order_detail/<o_id>',views.order_detail,name='order_detail'),
     # pdf generate 
     # path('pdf_generate/',views.pdf_generate,name='pdf_generate'),
+    path('make_address_default/',views.make_address_default,name='make_address_default'),
+    # wishlist
+    path('wishlist_view/',views.wishlist_view,name='wishlist_view'),
+    # add to wishlist
+    path('add_to_wishlist/',views.add_to_wishlist,name='add_to_wishlist'),
+    # delete from wishlist
+    path('delete_from_wishlist/',views.delete_from_wishlist,name='delete_from_wishlist'),
+    
     ]
 

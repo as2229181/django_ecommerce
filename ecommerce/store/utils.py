@@ -79,3 +79,10 @@ def guestOrder(request,data):
             quantity=item['quantity']
         )
     return customer,order
+
+
+
+def del_wishlist(request,pid):
+    customer=Customer.objects.get(user=request.user)
+    product=Product.objects.get(id=pid)
+    WishList.objects.get(product=product).delete()

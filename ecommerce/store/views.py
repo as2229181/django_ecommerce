@@ -3,7 +3,7 @@ from django.http import JsonResponse,HttpResponse
 from .models import*
 import json
 import datetime
-from .utils import cookeieCart,cartData,guestOrder
+from .utils import cookeieCart,cartData,guestOrder,del_wishlist
 from .form import UserRegisterForm,ProductReviewForm
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout,get_user_model
@@ -18,8 +18,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 from django.conf import settings
 from paypal.standard.forms import PayPalPaymentsForm
-import pdfkit
-from django.http import FileResponse
+
+
 
 '''
 Setting logger in views.py
@@ -265,6 +265,7 @@ def vender_detail(request,vid):
 
 def customer_view(request):
     customers=Customer.objects.all()
+    
     context={
         'customers':customers
     }
@@ -272,10 +273,24 @@ def customer_view(request):
 
 def customer_detail(request,c_id):
     customer=Customer.objects.get(id=c_id)
+    addresses= ShippingAddress.objects.filter(customer=customer).all().order_by('date_add')
+    address_now=addresses.first()
     orders=Order.objects.filter(customer=customer).all().order_by('-date_order')
+    if request.method == 'POST':
+        address=request.POST.get('address')
+        city=request.POST.get('city')
+        state=request.POST.get('state')
+        zipcode=request.POST.get('zipcode')
+        state=request.POST.get('country')
+        new_adddress=ShippingAddress.objects.create(customer=customer,address=address,city=city,state=state,zipcode=zipcode)
+        messages.success(request,"Added Address successfully!!")
+        customer_id=customer.id
+        return redirect('customer_detail',customer_id)
     context={
         'customer':customer,
-        'orders':orders
+        'orders':orders,
+        'addresses':addresses,
+        'address_now':address_now
     }
     return render(request,'new cart/customer_detail.html',context)
  
@@ -287,7 +302,7 @@ def test8(request,tag_slug=None):
         tag=get_object_or_404(Tag,slug=tag_slug)
         products=products.filter(tags__in=[tag])
         context={
-            'products':products     
+            'products':products, 
         }
     return render(request,'new cart/tag_shop.html',context)
 
@@ -369,7 +384,7 @@ def add_to_cart(request):
         'product_image':request.GET['product_image'],
         'total_price':''
     }
-
+    print(cart_product)
     if 'cart_data_obj' in request.session:
         if str(request.GET['id']) in request.session['cart_data_obj']:
             cart_data = request.session['cart_data_obj']
@@ -380,6 +395,7 @@ def add_to_cart(request):
             cart_data.update(cart_data)
             request.session["cart_data_obj"] = cart_data
             totalcaritems=len(request.session['cart_data_obj'])
+            del_wishlist(request,request.GET['id'])
         else:
             cart_data = request.session['cart_data_obj']
             cart_data.update(cart_product)
@@ -387,10 +403,12 @@ def add_to_cart(request):
             cart_data.update(cart_data)
             request.session['cart_data_obj'] = cart_data
             totalcaritems=len(request.session['cart_data_obj'])
+            del_wishlist(request,request.GET['id'])
     else:
         cart_product[str(request.GET['id'])]['total_price']= int(cart_product[str(request.GET['id'])]['quantity'])*float(cart_product[str(request.GET['id'])]['price'])
         request.session['cart_data_obj']= cart_product
         totalcaritems=len(request.session['cart_data_obj'])
+        del_wishlist(request,request.GET['id'])
     
     print(totalcaritems)
     
@@ -399,11 +417,15 @@ def add_to_cart(request):
 
 def cart_view(request):
     cart_total_amount = 0
+    cart_data =request.session['cart_data_obj']
     if 'cart_data_obj' in request.session:
         for p_id, item in request.session['cart_data_obj'].items():
-            cart_total_amount += int(item['quantity'])*float(item['price'])
-        cart_data =request.session['cart_data_obj']
-        context={'cart_data':cart_data,'totalcaritems':len(request.session['cart_data_obj']),'cart_total_account':cart_total_amount}
+            cart_total_amount += int(item['quantity'])*float(item['price'])            
+            cart_data[p_id]['total_price']=round(int(cart_data[p_id]['quantity'])*float(cart_data[p_id]['price']), 2)
+        request.session['cart_product_obj'] =cart_data
+        request.session.modified = True  # 更新 session 中的資料
+        request.session.save()  # 儲存 session 變更  
+        context={'cart_data':cart_data,'totalcaritems':len(request.session['cart_data_obj']),'cart_total_account':cart_total_amount,}
         print (request.session['cart_data_obj']) 
         print (len(request.session['cart_data_obj']))
         return render(request,'new cart/Cart.html',context)
@@ -432,6 +454,7 @@ def delete_from_cart(request):
 
 
 def update_cart(request):
+    
     product_id=str(request.GET['id'])
     product_quantity = request.GET['quantity']
     if 'cart_data_obj' in request.session:
@@ -457,10 +480,12 @@ def change_cart_quantity(request):
             quantity+=1
             cart_data[product_id]['quantity']=str(quantity)
             product_sum = round(int(cart_data[product_id]['quantity'])*float(cart_data[product_id]['price']), 2)                      
+            cart_data[product_id]['total_price']=product_sum
         if action == 'remove':
             quantity-=1
             cart_data[product_id]['quantity']=str(quantity)
             product_sum = round(int(cart_data[product_id]['quantity'])*float(cart_data[product_id]['price']), 2)  
+            cart_data[product_id]['total_price']=product_sum
             if  quantity<=0:
                 del cart_data[product_id]    
     request.session['cart_product_obj'] =cart_data
@@ -470,8 +495,10 @@ def change_cart_quantity(request):
     if 'cart_data_obj' in request.session:
         for p_id, item in request.session['cart_data_obj'].items():
             cart_total_amount += int(item['quantity'])*float(item['price'])
-            cart_total_amount = round(cart_total_amount, 2)   
+            cart_total_amount = round(cart_total_amount, 2)
+               
     context= render_to_string('new cart/async/cart-list.html',{'cart_data':request.session['cart_data_obj'],'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount})
+    
     return JsonResponse({'data':context,'quantity':quantity,'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount,'product_sum':product_sum})
 
 @login_required
@@ -529,9 +556,9 @@ def checkout_view(request):
             'cancel_url':'http://{}{}'.format(host,reverse('paypal_failed_view'))
         }
         paypal__payment_button = PayPalPaymentsForm(initial=paypal_dict)
-        
-                    
-        return render(request,'new cart/checkout.html',{'cart_data':request.session['cart_data_obj'],'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount,'paypal__payment_button':paypal__payment_button})
+        active_address = ShippingAddress.objects.filter(customer=customer,status=True).all().first()
+        total_count=WishList.objects.filter(customer=customer).count()            
+        return render(request,'new cart/checkout.html',{'cart_data':request.session['cart_data_obj'],'totalcartitems':len(request.session['cart_data_obj']),'cart_total_amount':cart_total_amount,'paypal__payment_button':paypal__payment_button,'active_address':active_address,'total_count':total_count})
 
 @csrf_exempt
 def ecpay_view(request):
@@ -590,3 +617,52 @@ def order_detail(request,o_id):
     }
 
     return  render(request,'new cart/order_detail.html',context)
+
+
+def make_address_default(request):
+    id=request.GET['id']
+    print(id)
+    ShippingAddress.objects.update(status=False)
+    ShippingAddress.objects.filter(id=id).update(status=True)
+    return JsonResponse({'boolean':True})
+
+def wishlist_view(request):
+    wishlist= WishList.objects.all()
+    context={
+        'ws':wishlist
+    }
+    return render(request,'new cart/wishlist.html',context)
+
+def add_to_wishlist(request):
+    pid=request.GET['id']
+    product=Product.objects.get(id=pid)
+    customer=Customer.objects.get(user=request.user)
+    wishlist_count=WishList.objects.filter(customer=customer,product=product).count()
+    
+    if wishlist_count > 0:
+        context={
+            'boolean':True
+        }
+    else:
+        new_wishlist=WishList.objects.create(customer=customer,product=product)
+    total_count=WishList.objects.filter(customer=customer).count()
+    print(total_count)
+    context={
+        'boolean':True,
+        'wishlist_count':wishlist_count,
+        'total_count':total_count
+    }
+      
+    return JsonResponse(context)
+
+def delete_from_wishlist(request):
+    customer=Customer.objects.get(user=request.user)
+    product_id = request.GET['id']
+    product = Product.objects.get(id=product_id)
+    WishList.objects.get(customer=customer,product=product).delete()
+    
+    new_wishlist=WishList.objects.filter(customer=customer).order_by('-date')
+    amount=WishList.objects.filter(customer=customer).count()
+    print(new_wishlist)
+    data=render_to_string('new cart/async/wish-list.html',{'ws':new_wishlist})
+    return JsonResponse({'data':data,'amount':amount})

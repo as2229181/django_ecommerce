@@ -1,0 +1,54 @@
+{% extends 'new cart/root.html' %}
+{% block content %}
+{% load static %}
+<div class="row" >
+        <div class="container py-5">
+                <div class="box-element cart_list">
+                        <div class="cart-row">
+                            <div style="flex:2"></div>
+                            <div style="flex:2"><strong>Item</strong></div>
+                            <div style="flex:1"><strong>Price</strong></div>
+                            <div style="flex:1"><strong>Stock status</strong></div>
+                            <div style="flex:2"><strong></strong></div>
+                            <div style="flex:1"><strong></strong></div>
+                            
+                            <div><button type="hidden" class="refresh-button-none"><i type="hidden" class="bi bi-bootstrap-reboot"></i></button></div>
+                            <div><button type="hidden" class="trash-button-none"><i type="hidden" class="bi bi-trash"></i></button></div>
+                        </div>
+                        {% if ws %}
+                        {% for w in ws %}
+                        <div class="cart-row">
+                            <div style="flex:2"><img class="row-image" src="{{ w.product.imagURL }}" ></div>
+                            <div style="flex:2">{{w.product.name}}</div>
+                            <div style="flex:1">${{w.product.price}}</div>
+                            <div style="flex:1">
+                                <i class="bi bi-box-seam text-danger "></i>
+                            </div>
+                            <div style="flex:2">
+                                <input type="hidden" value="{{ w.product.id }}" class="product-id-{{ w.product.id }}" name="" id="">
+                                <input type="hidden" value="{{ w.product.name }}" class="product-name-{{ w.product.id }}" name="" id="">
+                                <input type="hidden" value="{{ w.product.image.url }}" class="product-image-{{ w.product.id }}" name="" id="">
+                                <input type="hidden" value="{{ w.product.sui }}" class="product-pid-{{ w.product.id }}" name="" id="">
+                                <span style="display: none;" type="hidden" value="{{ w.product.price }}" class="current-product-price-{{ w.product.id }}" name="" id="">{{ w.product.price }}</span>
+                                <input type="hidden" class="product-quantity-{{ w.product.id }}" name="product-quanity " id="product-quanity" value="1">
+                                <button class="btn btn-outline-dark add-to-cart-btn" data-index="{{ w.product.id }}" >Add product</button>                  
+                            </div>
+                            <div style="flex:1">
+                                <button class="trash-button delete-wishlist" data-product="{{ w.product.id }}"><i class="bi bi-trash "></i></button>
+                            </div>
+                        </div>
+                          {% endfor %}
+                          {% else %}
+                          <div class="cart-row">
+                                <div style="flex:2"></div>
+                                <div style="flex:2">Nothing in wisshlist yet...</div>
+                                <div style="flex:1"></div>
+                                <div style="flex:1"></div>
+                                <div style="flex:2"></div>
+                                <div style="flex:1"></div>
+                         {% endif %}
+                     </div>
+                    </div>
+        </div>
+</div>        
+{% endblock  %}

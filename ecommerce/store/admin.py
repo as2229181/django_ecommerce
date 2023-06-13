@@ -34,13 +34,16 @@ class OrderItemAdmin(admin.ModelAdmin):
     def get_total(self, obj):
         return obj.get_total
     get_total.short_description = 'Total'
-    
+class ShippingAddressAdmin(admin.ModelAdmin):
+    list_editable=['city','address','zipcode','state','country','status']
+    list_display=['customer','address','city','state','zipcode','country','status']
+
 admin.site.register(User,UserAdmin)
 admin.site.register(Customer)
 admin.site.register(Product,ProdcutAdmin)
 admin.site.register(Order,OrderAdmin)
 admin.site.register(OrderItem,OrderItemAdmin)
-admin.site.register(ShippingAddress)
+admin.site.register(ShippingAddress,ShippingAddressAdmin)
 admin.site.register(Category,CategoryAdmin)
 admin.site.register(Vendor,VendorAdmin)
 admin.site.register(Tag)

@@ -242,9 +242,80 @@ $(document).ready(function(){
                 $('.product-quantity-'+product_id).text(response.quantity)
                 $('.product-price-'+product_id).text(response.product_sum)
                 $('#totalcartprice').text(response.cart_total_amount)
+                
             }
         })  
     })
+
+    //makeing default address
+    $(document).on("click",".make-default-address",function(){
+        let id = $(this).attr('data-address-id')
+        let this_val=$(this)
+        console.log('Id is:',id);
+        console.log('Element is:',this_val);
+        $.ajax({
+            url:"/store/make_address_default/",
+            data:{
+                "id":id,
+            },
+            dataType:'json',
+            success:function(response){
+                console.log('Address made default!!')
+                if(response.boolean == true){
+                    $('.check').hide();
+                    $('.action_btn').show();                 
+                    $('.check'+id).show();
+                    $('.button'+id).hide();
+                    
+                }
+            }
+        })
+    }),
+    $(document).on("click",".add-to-wishlist",function(){
+        let id = $(this).attr('data-product-item')
+        let this_val=$(this)
+        console.log('Id is:',id);
+        console.log('Element is:',this_val);
+        $.ajax({
+            url:"/store/add_to_wishlist/",
+            data:{
+                "id":id,
+            },
+            dataType:'json',
+            beforeSend:function(){
+                this_val.html('✓')
+            },
+            success:function(response){
+                if(response.boolean === true){
+                    console.log('Add to wish list!!!')
+                    
+                }
+                $('#wishlistcount').text(response.total_count)
+            }
+        })
+    })
+    $(document).on("click",".delete-wishlist",function(){
+        let p_id = $(this).attr('data-product')
+        let this_val=$(this)
+        console.log('Id is:',p_id);
+        console.log('Element is:',this_val);
+        $.ajax({
+            url:"/store/delete_from_wishlist/",
+            data:{
+                "id":p_id,
+            },
+            dataType:'json',
+            beforeSend:function(){
+                this_val.html('✓')
+            },
+            success:function(response){
+               $('.cart_list').html(response.data)
+               $('#wishlistcount').text(response.amount)
+               console.log('delete product')
+            }
+        })
+    })
+
     // $('.pdf-but').on('click',function(){
     //     let pdf_content = document.querySelector('.pdf-content').innerHTML;
     //     $.ajax({

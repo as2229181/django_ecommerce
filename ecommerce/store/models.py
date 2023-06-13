@@ -229,15 +229,14 @@ class OrderItem(models.Model):
         return total
    
 class ShippingAddress(models.Model):
-    user=models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
-    customer=models.ForeignKey(Customer,on_delete=models.SET_NULL,null=True)
-    order=models.ForeignKey(Order,on_delete=models.SET_NULL,null=True)
+    customer=models.ForeignKey(Customer,on_delete=models.SET_NULL,null=True,related_name='address')  
     address=models.CharField(max_length=200,null=False)
     city=models.CharField(max_length=200,null=False)
     state=models.CharField(max_length=200,null=False)
     zipcode=models.CharField(max_length=200,null=True)
     date_add=models.DateTimeField(auto_now_add=True)
-    status=models.BooleanField(default=True)
+    country=models.CharField(max_length=200,null=True,default='')
+    status=models.BooleanField(default=False)
     class Meta:
         verbose_name_plural='Shipping address'
     def __str__(self):
