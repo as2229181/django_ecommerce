@@ -5,6 +5,7 @@ from shortuuid.django_fields import ShortUUIDField
 from django.utils.html import mark_safe 
 from taggit.managers import TaggableManager
 from ckeditor.fields import RichTextField
+from django.db.models.signals import post_save
 def user_directory_path(instance,filename):
     return 'user_{0}/{1}'.format(instance.user.id,filename)
 
@@ -43,6 +44,7 @@ class User(AbstractUser):
     username=models.CharField(max_length=200, null=False,blank=True)
     email= models.EmailField(unique=True)
     introduction=models.CharField(max_length=2000)
+   
     USERNAME_FIELD='email'
     REQUIRED_FIELDS=['username']
     
@@ -285,3 +287,23 @@ class ContactUs(models.Model):
         verbose_name_plural = 'Contact Us'
     def __str__(self):
         return self.full_name
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='image')
+    full_name = models.CharField(max_length=200, null=True, blank=True)
+    introduction = models.CharField(max_length=200, null=True, blank=True)
+    phone= models.CharField(max_length=200)
+    verified = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return self.full_name
+
+def create_userprofile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
+
+post_save.connect(create_userprofile, sender=User)
+post_save.connect(save_user_profile, sender=User)
