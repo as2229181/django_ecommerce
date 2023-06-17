@@ -38,6 +38,9 @@ class ShippingAddressAdmin(admin.ModelAdmin):
     list_editable=['city','address','zipcode','state','country','status']
     list_display=['customer','address','city','state','zipcode','country','status']
 
+class ContactUsAdmin(admin.ModelAdmin):
+    list_display=['full_name','email','subject','message']
+
 admin.site.register(User,UserAdmin)
 admin.site.register(Customer)
 admin.site.register(Product,ProdcutAdmin)
@@ -49,3 +52,4 @@ admin.site.register(Vendor,VendorAdmin)
 admin.site.register(Tag)
 admin.site.register(ProductReview)
 admin.site.register(WishList)
+admin.site.register(ContactUs,ContactUsAdmin)

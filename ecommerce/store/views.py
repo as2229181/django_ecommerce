@@ -1,8 +1,12 @@
+import json
+import datetime
+import logging
+import calendar
+from django.db import connection
+from django.db.models.functions import ExtractMonth
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import JsonResponse,HttpResponse
 from .models import*
-import json
-import datetime
 from .utils import cookeieCart,cartData,guestOrder,del_wishlist
 from .form import UserRegisterForm,ProductReviewForm
 from django.contrib import messages
@@ -12,7 +16,6 @@ from django.db.models import Count,Avg
 from  taggit.models import Tag
 from django.db.models import Q
 from django.template.loader import render_to_string  
-import logging
 from .sample_create_order_ALL import main
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
@@ -165,7 +168,7 @@ def processOrder(request):
 
 def test(request):
     return render(request,'new cart/about.html')
-def test1(request):
+def contact_view(request):
     return render(request,'new cart/contact.html')
 
 
@@ -272,10 +275,23 @@ def customer_view(request):
     return render(request,'new cart/customer.html',context)
 
 def customer_detail(request,c_id):
-    customer=Customer.objects.get(id=c_id)
-    addresses= ShippingAddress.objects.filter(customer=customer).all().order_by('date_add')
-    address_now=addresses.first()
-    orders=Order.objects.filter(customer=customer).all().order_by('-date_order')
+    customer = Customer.objects.get(id=c_id)
+    addresses = ShippingAddress.objects.filter(customer=customer).all().order_by('date_add')
+    address_now = addresses.first()
+    order_list = Order.objects.filter(customer=customer).all().order_by('-date_order')
+    #orders_1 = OrderItem.objects.annotate(month=ExtractMonth("date_added")).values("month").exclude(date_added__isnull=True).annotate(count=Count("id")).values("month","count") # ANNOTATE 比較像是分組 按 OrderItem 分組 date_order 進行每月的統計
+    month = []
+    total_orders = []
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT EXTRACT(MONTH FROM date_added) as month, COUNT(id) as count
+            FROM store_orderitem
+            GROUP BY month
+        """)
+        orders = cursor.fetchall()
+    for o in orders:
+            month.append(calendar.month_name[o[0]])
+            total_orders.append(o[1])
     if request.method == 'POST':
         address=request.POST.get('address')
         city=request.POST.get('city')
@@ -288,9 +304,13 @@ def customer_detail(request,c_id):
         return redirect('customer_detail',customer_id)
     context={
         'customer':customer,
-        'orders':orders,
+        'order_list':order_list,
         'addresses':addresses,
-        'address_now':address_now
+        'address_now':address_now,
+        'orders':orders,
+        'month':month,
+        'total_orders':total_orders
+        
     }
     return render(request,'new cart/customer_detail.html',context)
  
@@ -666,3 +686,16 @@ def delete_from_wishlist(request):
     print(new_wishlist)
     data=render_to_string('new cart/async/wish-list.html',{'ws':new_wishlist})
     return JsonResponse({'data':data,'amount':amount})
+
+
+def contact_us_ajax(request):
+    full_name = request.GET['name']
+    email = request.GET['email']
+    subject = request.GET['subject']
+    message = request.GET['message']
+    ContactUs.objects.create(full_name=full_name,email=email,subject=subject,message=message)
+    context = {
+        'boolean':True,
+        'Message':'Message sent successfully!!'
+    }
+    return JsonResponse(context)

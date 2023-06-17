@@ -17,7 +17,7 @@ urlpatterns=[
     path('login/',views.login_view,name='login'),
     path('logout/',views.logout_view,name='logout'),
     path('test/',views.test,name='test'),
-    path('test1/',views.test1,name='test1'),
+    path('contact_view/',views.contact_view,name='contact_view'),
     path('test2/',views.test2,name='test2'),
     path('test3/<sui>',views.test3,name='test3'),
     path('test4/',views.test4,name='test4'),
@@ -56,6 +56,7 @@ urlpatterns=[
     path('add_to_wishlist/',views.add_to_wishlist,name='add_to_wishlist'),
     # delete from wishlist
     path('delete_from_wishlist/',views.delete_from_wishlist,name='delete_from_wishlist'),
-    
+    # delete from wishlist
+    path('contact_us_ajax/',views.contact_us_ajax,name='contact_us_ajax'),
     ]
 

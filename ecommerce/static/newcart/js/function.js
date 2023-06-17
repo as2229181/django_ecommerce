@@ -293,7 +293,7 @@ $(document).ready(function(){
                 $('#wishlistcount').text(response.total_count)
             }
         })
-    })
+    }),
     $(document).on("click",".delete-wishlist",function(){
         let p_id = $(this).attr('data-product')
         let this_val=$(this)
@@ -313,6 +313,62 @@ $(document).ready(function(){
                $('#wishlistcount').text(response.amount)
                console.log('delete product')
             }
+        })
+    }),
+    $(document).on("click",".delete-wishlist",function(){
+        let p_id = $(this).attr('data-product')
+        let this_val=$(this)
+        console.log('Id is:',p_id);
+        console.log('Element is:',this_val);
+        $.ajax({
+            url:"/store/delete_from_wishlist/",
+            data:{
+                "id":p_id,
+            },
+            dataType:'json',
+            beforeSend:function(){
+                this_val.html('✓')
+            },
+            success:function(response){
+               $('.cart_list').html(response.data)
+               $('#wishlistcount').text(response.amount)
+               console.log('delete product')
+            }
+        })
+        
+    }),
+    $(document).on("submit","#contact-form-ajax",function(e){
+        e.preventDefault()
+        console.log("Submited!!!");
+        let name = $('#name').val()
+        let email = $('#email').val()
+        let subject = $('#subject').val()
+        let message = $('#message').val()
+
+        console.log('Name:',name)
+        console.log('Email:',email)
+        console.log('Subject:',subject)
+        console.log('Message:',message)
+        $.ajax({
+            url:"/store/contact_us_ajax/",
+            data:{
+                'name':name,
+                'email':email,
+                'subject':subject,
+                'message':message
+            },
+            dataType:"json",
+            beforeSend:function(){
+                console.log("Sending data tp server...")
+                
+            },
+            success:function(r){
+                console.log('Sent Data to server !!')
+                $('#contact-form-ajax').hide()
+                $('#message-response').text(r.Message)
+            }
+
+
         })
     })
 
