@@ -8,7 +8,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import JsonResponse,HttpResponse
 from .models import*
 from .utils import cookeieCart,cartData,guestOrder,del_wishlist
-from .form import UserRegisterForm,ProductReviewForm
+from .form import UserRegisterForm,ProductReviewForm, ProfileForm
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout,get_user_model
 from django.contrib.auth.decorators import login_required
@@ -31,6 +31,7 @@ Logger = logging.getLogger('django')
 # Create your views here.
 User=get_user_model()
 def register(request):
+    message=[]
     if request.method =='POST':     
         form=UserRegisterForm(request.POST)
         print(form)
@@ -47,19 +48,20 @@ def register(request):
                 login(request,new_user)         
             print('User registered successfully!')
         except Exception as e:
+            
             message=messages.error(request, f'Error: {str(e)}')
         return redirect('/store/')
     else:
         form=UserRegisterForm()
         print('User cannot be registered!')    
     
-    context={'form':form}
+    context={'form':form,'messages':message}
     return render(request,'userauths/Signup.html',context)
 
 def login_view(request):
     if request.user.is_authenticated:
         messages.warning(request,f'Hey you are already loggin!!')
-        return redirect('test4')
+        return redirect('store')
     if request.method=='POST':
         email=request.POST.get('email')
         password=request.POST.get('password')
@@ -70,7 +72,7 @@ def login_view(request):
             if user is not None:            
                 login(request,user)
                 messages.success(request,"Logged in successfully!!!")
-                return redirect ('test4')
+                return redirect ('store')
             else:
                 messages.warning(request,'User is no exist,cret one!!!')
         except:
@@ -280,6 +282,8 @@ def customer_detail(request,c_id):
     address_now = addresses.first()
     order_list = Order.objects.filter(customer=customer).all().order_by('-date_order')
     #orders_1 = OrderItem.objects.annotate(month=ExtractMonth("date_added")).values("month").exclude(date_added__isnull=True).annotate(count=Count("id")).values("month","count") # ANNOTATE 比較像是分組 按 OrderItem 分組 date_order 進行每月的統計
+    profile = Profile.objects.get(user=request.user)
+    print(profile)
     month = []
     total_orders = []
     with connection.cursor() as cursor:
@@ -309,7 +313,8 @@ def customer_detail(request,c_id):
         'address_now':address_now,
         'orders':orders,
         'month':month,
-        'total_orders':total_orders
+        'total_orders':total_orders,
+        'profile':profile
         
     }
     return render(request,'new cart/customer_detail.html',context)
@@ -452,7 +457,7 @@ def cart_view(request):
     else:
         messages.warning(request,'Your cart is empty!!')
         print('not in')
-        return  redirect("test4")
+        return  redirect("store")
     
 
 def delete_from_cart(request):
@@ -699,3 +704,28 @@ def contact_us_ajax(request):
         'Message':'Message sent successfully!!'
     }
     return JsonResponse(context)
+
+
+def profile_update(request):
+    profile = Profile.objects.get(user=request.user)
+    if request.method == 'POST':
+        form = ProfileForm(request.POST,request.FILES,instance=profile )
+        if form.is_valid:
+            new_form = form.save(commit=False)
+            new_form.user = request.user
+            new_form.save()
+            customer=Customer.objects.get(user=request.user)
+            messages.success(request,"Profile Update Successfully!!")
+            return redirect("customer_detail",customer.id)
+    else:
+        form = ProfileForm(initial={'full_name':profile.full_name,'introduction':profile.introduction,'phone':profile.phone,'image':profile.image},instance=profile)        
+        context={
+            'profile':profile,
+            'form':form
+            }  
+        return render (request,"new cart/profile_edit.html",context)
+            
+        
+            
+          
+    

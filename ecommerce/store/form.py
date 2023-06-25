@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from store.models import User,ProductReview
+from store.models import User,ProductReview,Profile
 
 
 
@@ -14,10 +14,24 @@ class UserRegisterForm(UserCreationForm):
             model=User
             fields=['username',
                     'email']
-            
-            
+def get_profile(request):
+        profile = Profile.objects.get(user=request.user)           
+        return profile 
+
 class ProductReviewForm(forms.ModelForm):
         review = forms.CharField(widget=forms.Textarea(attrs={'placeholder':'Write review'}))
         class Meta:
                 model=ProductReview
                 fields=['review','rating']
+
+
+
+
+class ProfileForm(forms.ModelForm):
+        full_name = forms.CharField( widget=forms.TextInput(attrs={"placeholder":"Full Name",'class':'form-control'}))
+        introduction = forms.CharField(widget=forms.Textarea(attrs={"size": 500,"placeholder":"introduction",'class':'form-control'}))
+        phone = forms.CharField(widget=forms.TextInput(attrs={"placeholder":"phone",'class':'form-control'}))    
+      
+        class Meta:
+               model = Profile 
+               fields = ['full_name', 'image', "introduction", "phone"]                 

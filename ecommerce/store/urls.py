@@ -8,7 +8,7 @@ from django.contrib import admin
 
 
 urlpatterns=[
-    path("",views.store,name="store"),
+    path("",views.test4,name="store"),
     path("cart/",views.cart, name="cart1"),
     path('checkout/',views.checkout, name="checkout"),
     path("update_item/",views.updateItem,name="update_item"),
@@ -20,7 +20,7 @@ urlpatterns=[
     path('contact_view/',views.contact_view,name='contact_view'),
     path('test2/',views.test2,name='test2'),
     path('test3/<sui>',views.test3,name='test3'),
-    path('test4/',views.test4,name='test4'),
+    
     path('test5/<cid>/',views.test5,name='test5'),
     path('vendor_view',views.vendor_view,name='vendor_view'),
     path('vender_detail/<vid>/',views.vender_detail,name='vender_detail'),
@@ -58,5 +58,7 @@ urlpatterns=[
     path('delete_from_wishlist/',views.delete_from_wishlist,name='delete_from_wishlist'),
     # delete from wishlist
     path('contact_us_ajax/',views.contact_us_ajax,name='contact_us_ajax'),
+    # delete from wishlist
+    path('profile_update/',views.profile_update,name='profile_update'),
     ]
 

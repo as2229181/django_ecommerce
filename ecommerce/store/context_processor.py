@@ -7,7 +7,11 @@ def default(request):
     venders=Vendor.objects.all()
     tags=Product.tags.all()
     min_max_price=Product.objects.aggregate(Min('price'),Max('price'))
-    customer=Customer.objects.get(user=request.user)
+    
+    try:
+        customer=Customer.objects.get(user=request.user)
+    except:
+        pass
     try:
         total_count=WishList.objects.filter(customer=customer).count()
     except:
@@ -26,5 +30,6 @@ def default(request):
             'tags':tags,
             'min_max_price':min_max_price,
             'total_count':total_count,
-            'address':address        
+            'address':address,
+                  
             }

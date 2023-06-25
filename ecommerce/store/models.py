@@ -6,7 +6,13 @@ from django.utils.html import mark_safe
 from taggit.managers import TaggableManager
 from ckeditor.fields import RichTextField
 from django.db.models.signals import post_save
+from django.utils.text import slugify
+from os.path import splitext
 def user_directory_path(instance,filename):
+    name, ext = splitext(filename)
+    slugified_name = slugify(name)
+    # 重新組合檔名和副檔名
+    filename = "{}{}".format(slugified_name, ext)
     return 'user_{0}/{1}'.format(instance.user.id,filename)
 
 
@@ -113,8 +119,16 @@ class Customer(models.Model):
     name=models.CharField(max_length=200,null=True)
     email=models.CharField(max_length=200,null=True)
     contact=models.CharField(max_length=100,default='+886 0912768057')
+    iamge = models.ImageField(upload_to=user_directory_path,default='user.jpg')
     def __str__(self):
         return self.name or ''
+    @property
+    def imagURL(self):
+        try:
+            url=self.image.url
+        except:
+            url=""
+        return url
 
 class Tag(models.Model):
     pass
@@ -289,21 +303,30 @@ class ContactUs(models.Model):
         return self.full_name
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='image')
+    image = models.ImageField(upload_to=user_directory_path,default='product.png')
     full_name = models.CharField(max_length=200, null=True, blank=True)
     introduction = models.CharField(max_length=200, null=True, blank=True)
     phone= models.CharField(max_length=200)
     verified = models.BooleanField(default=False)
     
     def __str__(self):
-        return self.full_name
+        return self.user.username
+    @property
+    def imagURL(self):
+        try:
+            url=self.image.url
+        except:
+            url=""
+        return url
 
 def create_userprofile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
 
 def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
-
+    try:
+        instance.profile.save()
+    except Profile.DoesNotExist:
+        pass
 post_save.connect(create_userprofile, sender=User)
 post_save.connect(save_user_profile, sender=User)
