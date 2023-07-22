@@ -1,7 +1,7 @@
 # django_ecommerce 電商網站
 - An ecommerce web-site, allow customer to create、update and delete product at shopping cart.
 - Also have wishlist to add favorited product .
-- Customer profile page to check orderlist.
+- Also have customer profile page to check orderlist.
 
 # Sign in / Sign up page
 - Page for user to sign in or sign up
