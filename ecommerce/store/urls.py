@@ -20,7 +20,7 @@ urlpatterns=[
     path('contact_view/',views.contact_view,name='contact_view'),
     path('test2/',views.test2,name='test2'),
     path('test3/<sui>',views.test3,name='test3'),
-    
+
     path('test5/<cid>/',views.test5,name='test5'),
     path('vendor_view',views.vendor_view,name='vendor_view'),
     path('vender_detail/<vid>/',views.vender_detail,name='vender_detail'),
@@ -40,14 +40,14 @@ urlpatterns=[
     path('customer_detail/<int:c_id>',views.customer_detail,name='customer_detail'),
     #paypal
     path('paypal/',include('paypal.standard.ipn.urls')),
-    
-    # paypal complete 
+
+    # paypal complete
     path('paypal_compeleted_view/',views.paypal_compeleted_view,name='paypal_compeleted_view'),
     # paypal failed
     path('paypal_failed_view/',views.paypal_failed_view,name='paypal_failed_view'),
-    
+
     path('order_detail/<o_id>',views.order_detail,name='order_detail'),
-    # pdf generate 
+    # pdf generate
     # path('pdf_generate/',views.pdf_generate,name='pdf_generate'),
     path('make_address_default/',views.make_address_default,name='make_address_default'),
     # wishlist

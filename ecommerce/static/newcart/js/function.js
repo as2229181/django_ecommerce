@@ -19,7 +19,7 @@ $("#commentForm").submit(function (e) {
                 $('#review-res').html('Review added successfully!!')
                 $('.hide-comment').hide()
 
-                let _html ='<div class="d-flex">'                  
+                let _html ='<div class="d-flex">'
                 _html +='<div class="left">'
                 _html +='<span>'
                 _html +='<img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="profile-pict-img img-fluid" alt="" />'
@@ -41,7 +41,7 @@ $("#commentForm").submit(function (e) {
                 _html +='<div class="country-name font-accent">India</div>'
                 _html +='</div>'
                 _html +='<div class="review-description">'
-                _html +='<p>'+response.context.review +'</p>'                
+                _html +='<p>'+response.context.review +'</p>'
                 _html +='</div>'
                 _html +='<span class="publish py-3 d-inline-block w-100">' + time + '</span>'
                 _html +='<div class="helpful-thumbs">'
@@ -68,7 +68,7 @@ $("#commentForm").submit(function (e) {
                 $(".comment-list").prepend(_html)
                 console.log(response)
             }
-            
+
         }
 
     })
@@ -76,7 +76,7 @@ $("#commentForm").submit(function (e) {
 })
 
 
-$(document).ready(function(){  
+$(document).ready(function(){
     $(".filter-checkbox,#price-filter-btn").on("click",function(){
         console.log('A checkbox have been clicked!!');
         let filter_object={}
@@ -108,11 +108,11 @@ $(document).ready(function(){
                 console.log("Data filter successfully!!!");
                 $('#filtered-product').html(response.data)
             }
-        
+
         })
-    })   
+    })
     $('.add-to-cart-btn').on('click',function(){
-    
+
 
     let this_val = $(this)
     let index = this_val.attr("data-index")
@@ -122,8 +122,8 @@ $(document).ready(function(){
     let prodcut_id = $('.product-id-'+ index).val()
     let current_price = $('.current-product-price-'+ index).text()
     let product_image = $('.product-image-'+ index).val()
-    
-    
+
+
     console.log('Quantity:',quantity);
     console.log('name:',prodcut_name);
     console.log('id:',prodcut_id);
@@ -156,10 +156,10 @@ $(document).ready(function(){
             $('#cart-number').text(response.totalcaritems)
             console.log('Added to the cart');
         }
-    
+
     })
-    })    
-    
+    })
+
     $('#max_price').on('blur',function(){
         let min_price = $(this).attr('min')
         let max_price = $(this).attr('max')
@@ -185,7 +185,7 @@ $(document).ready(function(){
             return false
         }
     })
-   
+
     $('.update-product').on('click',function(){
         let product_id = $(this).attr('data-product')
         let product_quantity = $('.product-quantity-'+ product_id)
@@ -212,21 +212,6 @@ $(document).ready(function(){
     $('.chg-quantity').on('click',function(){
         let action = $(this).attr('data-action')
         let product_id = $(this).attr('data-product')
-        
-        // if (action == 'add'){
-        //     cart_data_obj['product_id']['quantity']+=1
-        // }
-        // if(action=='remove'){
-        //     cart_data_obj[product_id]['quantity']-=1
-        //     if (cart_data_obj[product_id]['quantity']<=0){
-        //         delete cart_data_obj[product_id]
-        //         console.log('remove product')    
-        //     }
-        // }
-        // let price = cart_data_obj[product_id]['quantity']*cart_data_obj['price']
-        // let quantity = cart_data_obj[product_id]['quantity']
-        // $('#producttotalprice').text(price)
-        // $('#productquantity').text(quantity)
         $.ajax({
             url:"/store/change_cart_quantity/",
             data:{
@@ -242,9 +227,9 @@ $(document).ready(function(){
                 $('.product-quantity-'+product_id).text(response.quantity)
                 $('.product-price-'+product_id).text(response.product_sum)
                 $('#totalcartprice').text(response.cart_total_amount)
-                
+
             }
-        })  
+        })
     })
 
     //makeing default address
@@ -263,10 +248,10 @@ $(document).ready(function(){
                 console.log('Address made default!!')
                 if(response.boolean == true){
                     $('.check').hide();
-                    $('.action_btn').show();                 
+                    $('.action_btn').show();
                     $('.check'+id).show();
                     $('.button'+id).hide();
-                    
+
                 }
             }
         })
@@ -288,7 +273,7 @@ $(document).ready(function(){
             success:function(response){
                 if(response.boolean === true){
                     console.log('Add to wish list!!!')
-                    
+
                 }
                 $('#wishlistcount').text(response.total_count)
             }
@@ -315,28 +300,6 @@ $(document).ready(function(){
             }
         })
     }),
-    $(document).on("click",".delete-wishlist",function(){
-        let p_id = $(this).attr('data-product')
-        let this_val=$(this)
-        console.log('Id is:',p_id);
-        console.log('Element is:',this_val);
-        $.ajax({
-            url:"/store/delete_from_wishlist/",
-            data:{
-                "id":p_id,
-            },
-            dataType:'json',
-            beforeSend:function(){
-                this_val.html('✓')
-            },
-            success:function(response){
-               $('.cart_list').html(response.data)
-               $('#wishlistcount').text(response.amount)
-               console.log('delete product')
-            }
-        })
-        
-    }),
     $(document).on("submit","#contact-form-ajax",function(e){
         e.preventDefault()
         console.log("Submited!!!");
@@ -360,7 +323,7 @@ $(document).ready(function(){
             dataType:"json",
             beforeSend:function(){
                 console.log("Sending data tp server...")
-                
+
             },
             success:function(r){
                 console.log('Sent Data to server !!')
@@ -372,32 +335,10 @@ $(document).ready(function(){
         })
     })
 
-    // $('.pdf-but').on('click',function(){
-    //     let pdf_content = document.querySelector('.pdf-content').innerHTML;
-    //     $.ajax({
-    //         url:"/store/pdf_generate/",
-    //         data:{
-    //             'pdf_content':pdf_content,
-    //         },
-    //         datatype: "json",
-    //         success:function(response){
-    //             let blob = new Blob([response], { type: 'application/pdf' });
-    //             let url = window.URL.createObjectURL(blob);
-    //             let a = document.createElement('a');
-    //             a.href = url;
-    //             a.download = 'filename.pdf';
-    //             document.body.appendChild(a);
-    //             a.click();
-    //             document.body.removeChild(a);
-    //             window.URL.revokeObjectURL(url);
-    //         }
-
-    //     })  
-    // })
 })
 
-$(document).on('click','.delete-product',function(){  
-    
+$(document).on('click','.delete-product',function(){
+
     let product_id = $(this).attr('data-product')
     let this_val= $(this)
 
@@ -413,52 +354,16 @@ $(document).on('click','.delete-product',function(){
         },
         success:function(response){
             this_val.show()
-            $('#cart-number').text(response.totalcaritems)
+            $('#cart-number').text(response.totalcartitems)
             $('.cart_list').html(response.data)
-            $('#cart-totalcartitems').text(response.totalcaritems)
+            $('#totalcartitems').text(response.totalcartitems)
             $('.product-quantity-'+product_id).text(response.quantity)
             $('.product-price-'+product_id).text(response.product_sum)
             $('#totalcartprice').text(response.cart_total_amount)
         }
-    
+
 })
 })
 
 
 
-/*
-$('#add-to-cart-btn').on('click',function(e){
-    e.preventDefault();
-    let quantity = parseInt($('#var-value').text())
-    let prodcut_name = $('.product-name').val()
-    let prodcut_id = $('.product-id').val()
-    let current_price = $('#current-product-price').text()
-    let this_val = $(this)
-    console.log('Quantity:',quantity);
-    console.log('Prodcut_name:',prodcut_name);
-    console.log('Prodcut_id:',prodcut_id);
-    console.log('Current_price:',current_price);
-    console.log('Current_element:',this_val);
-
-
-    $.ajax({
-        url : '/store/add_to_cart',
-        data: {
-            'id':prodcut_id,
-            'name':prodcut_name,
-            'price':current_price,
-            'quantity':quantity
-        },
-        datatype:'json',
-        beforeSend:function(){
-            console.log('Adding the product to the cart!!');
-        },
-        success:function(res){
-            this_val.html('Item add to the cart!!')
-            $('#cart-number').html(res.totalcaritems)
-            console.log('Added to the cart');
-        }
-    
-    })
-})
-*/  

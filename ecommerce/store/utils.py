@@ -2,12 +2,12 @@ import json
 from .models import *
 
 def cookeieCart(request):
-    
+
     try:
         cart=json.loads(request.COOKIES['cart'])
     except:
         cart={}
-    
+
     print('cart:',cart)
     items=[]
     order={"get_cart_items":0,"get_cart_total":0,'shipping':False}
@@ -24,22 +24,22 @@ def cookeieCart(request):
                 'id':product.id,
                 'name':product.name,
                 'price':product.price,
-                'imagURL':product.imagURL    
+                'imagURL':product.imagURL
                 },
                 'quantity':cart[i]['quantity'],
-                'get_total':total   
+                'get_total':total
             }
             items.append(item)
             print(items)
             if product.digital==False:
-                order['shipping']=True   
+                order['shipping']=True
         except:
-            pass     
+            pass
     return {'items':items,"order":order,"cartItems":cartItems}
 
 
 def cartData(request):
-    
+
     customer=None
 
     if request.user.is_authenticated: #確認user是有被授權的
@@ -52,7 +52,7 @@ def cartData(request):
        cookieData= cookeieCart(request)
        items=cookieData['items']
        order=cookieData['order']
-       cartItems=cookieData['cartItems'] 
+       cartItems=cookieData['cartItems']
     return {'items':items,"order":order,"cartItems":cartItems}
 
 def guestOrder(request,data):
@@ -83,6 +83,10 @@ def guestOrder(request,data):
 
 
 def del_wishlist(request,pid):
-    customer=Customer.objects.get(user=request.user)
-    product=Product.objects.get(id=pid)
-    WishList.objects.get(product=product).delete()
+        customer = Customer.objects.get(user=request.user)
+        product = Product.objects.get(id=pid)
+        try:
+            wishlist_item = WishList.objects.get(product=product,customer=customer)
+            wishlist_item.delete()
+        except WishList.DoesNotExist:
+            pass
