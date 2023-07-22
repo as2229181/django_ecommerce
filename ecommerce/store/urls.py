@@ -8,23 +8,22 @@ from django.contrib import admin
 
 
 urlpatterns=[
-    path("",views.test4,name="store"),
-    path("cart/",views.cart, name="cart1"),
-    path('checkout/',views.checkout, name="checkout"),
-    path("update_item/",views.updateItem,name="update_item"),
-    path("process_order/",views.processOrder,name="processOrder"),
+    path("",views.store,name="store"),
+    # path('checkout/',views.checkout, name="checkout"),
+    # path("update_item/",views.updateItem,name="update_item"),
+    # path("process_order/",views.processOrder,name="processOrder"),
     path('register/',views.register,name='register'),
     path('login/',views.login_view,name='login'),
     path('logout/',views.logout_view,name='logout'),
-    path('test/',views.test,name='test'),
-    path('contact_view/',views.contact_view,name='contact_view'),
-    path('test2/',views.test2,name='test2'),
-    path('test3/<sui>',views.test3,name='test3'),
 
-    path('test5/<cid>/',views.test5,name='test5'),
+    path('contact/',views.contact,name='contact'),
+    path('intro/',views.intro,name='intro'),
+    path('product/get/<sui>/',views.product,name='product'),
+
+    path('category/get/<cid>/',views.category_view,name='category'),
     path('vendor_view',views.vendor_view,name='vendor_view'),
     path('vender_detail/<vid>/',views.vender_detail,name='vender_detail'),
-    path('test8/<slug:tag_slug>/',views.test8,name='test8'),
+    path('tag/get/<slug:tag_slug>/',views.tag_view,name='tag'),
     path('ajax_add_review/<sui>',views.ajax_add_review,name='ajax_add_review'),
     path('search',views.search_view,name='search'),
     path('filter_product/',views.filter_product,name='filter_product'),

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
-    
+
     <link rel="apple-touch-icon" href="{%static 'images/newcart/apple-icon.png' %}">
     <link rel="shortcut icon" type="image/x-icon" href="{%static 'images/newcart/favicon.ico' %}">
     <link rel="stylesheet" href="{% static 'newcart/css/slick.min.css' %}">
@@ -22,26 +22,26 @@
     <link rel="stylesheet" href="{% static 'newcart/css/filter/main.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    
 
-   
-    
+
+
+
     <!-- Load fonts style after rendering the layout styles -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
     <link rel="stylesheet" href="{% static 'newcart/css/fontawesome.min.css' %}">
-    
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
     <style>
-        header { 
+        header {
          @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
-    
+
         @import url('{% static 'dashboard/css/bootstrap.min.css' %}');
         @import url('{% static 'dashboard/font-awesome-4.7.0/css/font-awesome.min.css' %}');
-    
+
         @import url('{% static 'dashboard/css/font-icon-style.css' %}');
         @import url('{% static 'dashboard/css/style.default.css' %}');
         @import url('{% static 'dashboard/css/bootstrap.min.css' %}');
-    
+
         /* Core stylesheets */
         @import url('{% static 'dashboard/css/apps/invoice.css' %}');
         @import url('{% static 'dashboard/css/apps/email.css' %}');
@@ -49,13 +49,13 @@
         @import url('{% static 'dashboard/css/apps/calendar.css' %}');
          }
     </style>
-    
+
 
     <!--
 
-    
-    
-    
+
+
+
 TemplateMo 559 Zay Shop
 
 https://templatemo.com/tm-559-zay-shop
@@ -102,7 +102,7 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="flex-fill">
                     <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'test2' %}">Home</a>
+                            <a class="nav-link" href="{% url 'intro' %}">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'store' %}">Store</a>
@@ -113,7 +113,7 @@ https://templatemo.com/tm-559-zay-shop
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                               {% for c in categories %}
-                                <a class="dropdown-item" href="{% url 'test5' c.cid %}">{{c.title}}<img src="{{ c.image.url }}"  width="30" height="30" ></a>
+                                <a class="dropdown-item" href="{% url 'category' c.cid %}">{{c.title}}<img src="{{ c.image.url }}"  width="30" height="30" ></a>
                                 {% endfor %}
                             </div>
                           </li>
@@ -128,7 +128,7 @@ https://templatemo.com/tm-559-zay-shop
                             <input type="text" class="form-control" id="inputMobileSearch" placeholder="Search ...">
                             <div class="input-group-text">
                                 <i class="fa fa-fw fa-search" ></i>
-                            </div>     
+                            </div>
                         </div>
                     </div>
                     <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal" data-bs-target="#templatemo_search">
@@ -146,7 +146,7 @@ https://templatemo.com/tm-559-zay-shop
                         <i class="fa fa-fw fa-user text-dark mr-3"></i>
                         <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">+99</span>
                     </a>
-                    {% if request.user.is_authenticated %}                 
+                    {% if request.user.is_authenticated %}
                     <a class="nav-icon position-relative text-decoration-none" href="{% url 'logout' %}">
                         <i class="bi bi-door-closed text-dark mr-3"></i>
                         <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">logout</span>
@@ -174,9 +174,9 @@ https://templatemo.com/tm-559-zay-shop
         </div>
 <div id="filter-body" class="collapse">
 <div class="card-body">
-    <div class="container">    
+    <div class="container">
         <div class="row">
-            <aside class="col-sm-4">        
+            <aside class="col-sm-4">
         <div class="card">
             <article class="card-group-item">
                 <header class="card-header">
@@ -184,31 +184,31 @@ https://templatemo.com/tm-559-zay-shop
                 </header>
                 <div class="filter-content">
                     <div class="card-body">
-                     
+
                     <form>
-                        <style> .badge {color: black;}</style> 
+                        <style> .badge {color: black;}</style>
                         {% for c in categories %}
                         <label class="form-check">
-                            
+
                           <input class="form-check-input filter-checkbox" data-filter="category" type="checkbox" value="{{ c.id }}">
-                          <a class="form-check-label " href="{% url 'test5' c.cid %}"><img src="{{c.image.url}}" width="20px" height="20px">
+                          <a class="form-check-label " href="{% url 'category' c.cid %}"><img src="{{c.image.url}}" width="20px" height="20px">
                             {{ c.title }}<span class="float-right badge badge-light round">{{ c.product.count }}</span>
                         </a>
                         </label> <!-- form-check.// -->
                         {% endfor %}
-                    </form>          
+                    </form>
                     </div> <!-- card-body.// -->
                 </div>
-            </article> <!-- card-group-item.// -->            
+            </article> <!-- card-group-item.// -->
         </div> <!-- card.// -->
-        
-        
-        
-        
+
+
+
+
             </aside> <!-- col.// -->
             <aside class="col-sm-4">
 
-           
+
         <div class="card">
             <article class="card-group-item">
                 <header class="card-header"><h6 class="title">Vendor </h6></header>
@@ -217,16 +217,16 @@ https://templatemo.com/tm-559-zay-shop
                         <form>
                             {% for v in venders %}
                             <label class="form-check">
-                                
+
                               <input class="form-check-input filter-checkbox" data-filter="vendor" type="checkbox" value="{{ v.id }}">
                               <span class="form-check-label"><img src="{{v.image.url}}" width="20px" height="20px">
                                 {{ v.title }}
                               </span>
                             </label> <!-- form-check.// -->
                             {% endfor %}
-                        </form>      
+                        </form>
                     </div> <!-- card-body.// -->
-                    <!--  
+                    <!--
                     <div class="list-group list-group-flush">
                         <style>.list-group-item .badge {color: black;}</style>
                       <a href="#" class="list-group-item">Cras justo odio <span class="float-right badge badge-light round">142</span> </a>
@@ -245,36 +245,36 @@ https://templatemo.com/tm-559-zay-shop
                           <input class=" filter-checkbox" data-filter="tag" type="checkbox" name="myradio" value="{{ t.id }}">
                           <span class="form-check-label"><i class="bi bi-hash">{{ t }}</i></span>
                         </label>
-                        {% endfor %}                        
+                        {% endfor %}
                     </div> <!-- card-body.// -->
                 </div>
             </article> <!-- card-group-item.// -->
         </div> <!-- card.// -->
-        
-        
-        
+
+
+
             </aside> <!-- col.// -->
             <aside class="col-sm-4">
-        
-        
-        
+
+
+
         <div class="card">
-            
-            
+
+
             <article class="card-group-item">
                 <header class="card-header">
                     <h6 class="title">Range input </h6>
                 </header>
-                
+
                 <div class="col-xs-6">
                     <div class="range range-primary">
-                      <input class="range-slider" id="range" type="range" name="range" min="{{min_max_price.price__min}}" max="{{min_max_price.price__max}}" value="{{min_max_price.price__min|floatformat:2}}"  oninput="max_price.value=this.value">                                              
+                      <input class="range-slider" id="range" type="range" name="range" min="{{min_max_price.price__min}}" max="{{min_max_price.price__max}}" value="{{min_max_price.price__min|floatformat:2}}"  oninput="max_price.value=this.value">
                     </div>
                     <div class="d-flex justify-content-between" style="padding: 0 10px;" >
                         <div class="caption">From:<strong id="slide-range-value1" class="text-brand" >{{min_max_price.price__min|floatformat:2}}</strong></div>
                         <div class="caption">To:<strong id="slide-range-value2" class="text-brand" >{{min_max_price.price__max|floatformat:2}}</strong></div>
                     </div>
-                    
+
                     <div class="d-flex justify-content-center" >
                         <!--<output  class="" id="rangePrimary">50</output>-->
                         <input  type="text" class="form-control wt-80"  aria-label="Small" aria-describedby="inputGroup-sizing-sm"  name="" value="{{min_max_price.price__min|floatformat:2}}" id="max_price" min="{{min_max_price.price__min|floatformat:2}}" max="{{min_max_price.price__max|floatformat:2}}"  placeholder="Current Price" onkeyup="range.value=this.value">
@@ -286,16 +286,16 @@ https://templatemo.com/tm-559-zay-shop
                         <button class="btn btn-success mt-20 wt-80 custom-btn" id="price-filter-btn"type='button' >Filter</button>
                     </div>
                 </div>
-            
+
         <!--    <article class="card-group-item">
                 <header class="card-header">
                     <h6 class="title">Selection </h6>
                 </header>
                 <div class="filter-content">
                     <div class="card-body">
-                        <style> .badge {color: black;}</style>        
+                        <style> .badge {color: black;}</style>
                         <div class="custom-control custom-checkbox">
-                            
+
                             <span class="float-right badge badge-light round">52</span>
                               <input type="checkbox" class="custom-control-input" id="Check1">
                               <label class="custom-control-label" for="Check1">Samsung</label>
@@ -306,13 +306,13 @@ https://templatemo.com/tm-559-zay-shop
                               <input type="checkbox" class="custom-control-input" id="Check2">
                              <label class="custom-control-label" for="Check2">Black berry</label>
                         </div> <!-- form-check.// -->
-        
+
         <!--                <div class="custom-control custom-checkbox">
                             <span class="float-right badge badge-light round">17</span>
                               <input type="checkbox" class="custom-control-input" id="Check3">
                               <label class="custom-control-label" for="Check3">Samsung</label>
                         </div> <!-- form-check.// -->
-        
+
         <!--                <div class="custom-control custom-checkbox">
                             <span class="float-right badge badge-light round">7</span>
                               <input type="checkbox" class="custom-control-input" id="Check4">
@@ -321,15 +321,15 @@ https://templatemo.com/tm-559-zay-shop
         <!--            </div> <!-- card-body.// -->
         <!--         </div>
         <!--    </article> <!-- card-group-item.// -->
-        
+
         </div> <!-- card.// -->
-        
-        
-        
+
+
+
             </aside> <!-- col.// -->
         </div> <!-- row.// -->
-        
-        </div> 
+
+        </div>
         </div>
         </div>
         {% else %}
@@ -354,10 +354,10 @@ https://templatemo.com/tm-559-zay-shop
     </div>
 
     {% block content %}
-    {% endblock content  %} 
+    {% endblock content  %}
 
 
-    
+
     <!-- Start Footer -->
     <footer class="bg-dark" id="tempaltemo_footer">
         <div class="container">
@@ -442,7 +442,7 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="row pt-2">
                     <div class="col-12">
                         <p class="text-left text-light">
-                            Copyright &copy; 2021 Company Name 
+                            Copyright &copy; 2021 Company Name
                             | Designed by <a rel="sponsored" href="https://templatemo.com/page/1" target="_blank">TemplateMo</a>
                         </p>
                     </div>
@@ -454,7 +454,7 @@ https://templatemo.com/tm-559-zay-shop
     <!-- End Footer -->
 
     <!-- Start Script -->
-    
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

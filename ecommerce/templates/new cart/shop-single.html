@@ -20,17 +20,17 @@
                                 <span class="sr-only">Previous</span>
                             </a>
                         </div>
-                       
+
                         <!--End Controls-->
                         <!--Start Carousel Wrapper-->
                         <div id="multi-item-example" class="col-10 carousel slide carousel-multi-item" data-bs-ride="carousel">
                             <!--Start Slides-->
-                            
+
                             <div class="carousel-inner product-links-wap" role="listbox">
-                                
+
                                 <!--First slide-->
                                 <div class="carousel-item active">
-                                    
+
                                     <div class="row">
                                         {% for index, p_image in p_images_enumerated %}
                                         <div class="col-4">
@@ -38,15 +38,15 @@
                                                 <img class="card-img img-fluid" src="{%  static 'p_image' %}" alt="Product Image {{ index|add:1 }}">
                                               </a>
                                         </div>
-                                        {% endfor %}                                          
-                                    </div>     
-                                                       
+                                        {% endfor %}
+                                    </div>
+
                                 </div>
-                                  
-                                
-                              
+
+
+
                                 <!--/.First slide-->
-                              
+
                                 <!--Second slide-->
                                 <div class="carousel-item">
                                     <div class="row">
@@ -112,17 +112,17 @@
                                     </ul>
                                     <ul class="list-unstyled d-flex align-items-start justify-content-start">
                                         <i class="bi bi-shop"></i>
-                                        <li class="ml-4 h3 ">Seller:{{ product.vendor }}</li>                                                                                  
+                                        <li class="ml-4 h3 ">Seller:{{ product.vendor }}</li>
                                     </ul>
                                     <ul class="list-unstyled d-flex align-items-start justify-content-start ">
-                                        <i class="bi bi-geo-alt"> </i>                                         
+                                        <i class="bi bi-geo-alt"> </i>
                                         <li class="ml-4 mb-0"><div>{{address.zipcode}},{{ address.address }},{{address.city}},{{address.state}}</div>
-                                        {% if address.status == True %} 
+                                        {% if address.status == True %}
                                         <div class="ml-1 text-success"><small>Vertified address</small></div>
-                                        {% else %} 
+                                        {% else %}
                                         <div class="ml-1  text-danger"><small>Unvertified address</small></div>
-                                        {% endif %} 
-                                    </li>                                                                                    
+                                        {% endif %}
+                                    </li>
                                     </ul>
                                 <hr></hr>
                                 <ul class="list-unstyled d-flex align-items-start justify-content-start ">
@@ -130,15 +130,15 @@
                                 </ul>
                                 <ul class="list-unstyled d-flex align-items-start justify-content-start mb-0">
                                     <i class="bi bi-shield-check"></i>
-                                    <li class="ml-4 h3 ">{{ product.vendor.authentic_rating }}% Authentic</li>                                                                                  
+                                    <li class="ml-4 h3 ">{{ product.vendor.authentic_rating }}% Authentic</li>
                                 </ul>
                                 <ul class="list-unstyled d-flex align-items-start justify-content-start mb-0">
                                     <i class="bi bi-arrow-clockwise"></i>
-                                    <li class="ml-4 h3 ">{{ product.vendor.days_return }} Days return</li>                                                                                  
+                                    <li class="ml-4 h3 ">{{ product.vendor.days_return }} Days return</li>
                                 </ul>
                                 <ul class="list-unstyled d-flex align-items-start justify-content-start mb-0">
                                     <i class="bi bi-file-earmark-text-fill"></i>
-                                    <li class="ml-4 h3 ">{{ product.vendor.warrant_period }} Months warranty</li>                                                                                  
+                                    <li class="ml-4 h3 ">{{ product.vendor.warrant_period }} Months warranty</li>
                                 </ul>
                                 </div>
                             </div>
@@ -165,7 +165,7 @@
                                 <span class="list-inline-item text-dark"> <mark><strong>-{{ product.get_percentage|floatformat:0 }}%</strong></mark></span>
                             </p>
                             {% endif %}
-                            
+
                             <p class="py-2">
                                 <i class="fa fa-star text-warning"></i>
                                 <i class="fa fa-star text-warning"></i>
@@ -179,7 +179,7 @@
                                     <h6>Tag:</h6>
                                 </li>
                                 <li class="list-inline-item">
-                                    <p class="text-muted">{% for tags in product.tags.all %}<a href="{% url 'test8' tags %}">#{{ tags.name }}</a>, {% endfor %}</p>
+                                    <p class="text-muted">{% for tags in product.tags.all %}<a href="{% url 'tag' tags %}">#{{ tags.name }}</a>, {% endfor %}</p>
                                 </li>
                             </ul>
 
@@ -240,7 +240,7 @@
                                         <button type="submit" class="btn btn-success btn-lg add-to-cart-btn" data-index="{{ product.id }}" name="submit" value="addtocard" id="add-to-cart-btn">Add To Cart</button>
                                     </div>
                                 </div>
-                            
+
 
                         </div>
                     </div>
@@ -368,7 +368,7 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="review-list">
             <ul>
                 <li>
@@ -475,8 +475,8 @@
     <!-- Start Review form -->
     {% if make_review == True %}
     {% if request.user.is_authenticated %}
-    
-    <div class="container">    
+
+    <div class="container">
         <form method="post" action="{% url 'ajax_add_review' product.sui %}" role="form" id="commentForm">
             {% csrf_token %}
             <div class="mb-3 ">
@@ -491,12 +491,12 @@
                 <div class="col text-end mt-2">
                     <button type="submit" class="btn btn-success btn-lg px-3">Add review</button>
                 </div>
-            </div>            
-        </form>  
-    
+            </div>
+        </form>
+
     </div>
     {% endif %}
-    {% endif %}  
+    {% endif %}
     <!-- Close Review form -->
 
 
@@ -524,7 +524,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <a href="{% url 'test3' p.sui %}" class="h3 text-decoration-none">{{p.name}}</a>
+                            <a href="{% url 'product' p.sui %}" class="h3 text-decoration-none">{{p.name}}</a>
                             <ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
                                 <li>M/L/X/XL</li>
                                 <li class="pt-2">
@@ -550,14 +550,14 @@
                             <p class="text-center mb-0">{{p.price}}</del>
                             {% else %}
                             <p class="text-center mb-0">{{p.price}}<del class="ml-1 h6">{{p.old_price}}</del>
-                            {% endif %}                           
+                            {% endif %}
                         </div>
                     </div>
-                </div> 
+                </div>
                 {% else %}
                 <h5> There is no related products</h5>
                 {% endif %}
-                {% endfor %}  
+                {% endfor %}
             </div>
 
 

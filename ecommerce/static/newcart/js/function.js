@@ -1,6 +1,25 @@
 console.log('Working fine!!!');
 const monthNames=['Jan','Feb','Mar','April','June','July','Aug','Sep','Oct','Nov','Dec']
 
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+
+
 
 
 $("#commentForm").submit(function (e) {
@@ -10,9 +29,11 @@ $("#commentForm").submit(function (e) {
     $.ajax({
         data: $(this).serialize(),
         method: $(this).attr('method'),
+        headers: {
+            'X-CSRFToken': csrftoken
+          },
         url: $(this).attr('action'),
         dataType: 'json',
-
         success: function (response) {
             console.log('Comment already saved !!!');
             if (response.bool == true) {
@@ -98,6 +119,9 @@ $(document).ready(function(){
         console.log("Filter Object is :", filter_object);
         $.ajax({
             url:'/store/filter_product',
+            headers: {
+                'X-CSRFToken': csrftoken
+              },
             data:filter_object,
             dataType:'json',
             beforeSend:function(){
@@ -144,9 +168,13 @@ $(document).ready(function(){
             'price':current_price,
             'quantity':quantity
         },
+        headers: {
+            'X-CSRFToken': csrftoken
+          },
         datatype:'json',
-        beforeSend:function(){
+        beforeSend:function(xhr){
             console.log('Adding the product to the cart!!');
+            console.log(this.headers);
         },
         success:function(response){
             this_val.show()
@@ -198,6 +226,9 @@ $(document).ready(function(){
                 'id':product_id,
                 'quantity':product_quantity
             },
+            headers: {
+                'X-CSRFToken': csrftoken
+              },
             datatype: "json",
             beforeSend:function(){
             console.log('Trying refresh product:',product_id)
@@ -218,6 +249,9 @@ $(document).ready(function(){
                 'id':product_id,
                 'action':action
             },
+            headers: {
+                'X-CSRFToken': csrftoken
+              },
             datatype: "json",
             beforeSend:function(){
             console.log('change product item')
@@ -243,6 +277,9 @@ $(document).ready(function(){
             data:{
                 "id":id,
             },
+            headers: {
+                'X-CSRFToken': csrftoken
+              },
             dataType:'json',
             success:function(response){
                 console.log('Address made default!!')
@@ -266,6 +303,9 @@ $(document).ready(function(){
             data:{
                 "id":id,
             },
+            headers: {
+                'X-CSRFToken': csrftoken
+              },
             dataType:'json',
             beforeSend:function(){
                 this_val.html('✓')
@@ -289,6 +329,9 @@ $(document).ready(function(){
             data:{
                 "id":p_id,
             },
+            headers: {
+                'X-CSRFToken': csrftoken
+              },
             dataType:'json',
             beforeSend:function(){
                 this_val.html('✓')
@@ -320,6 +363,9 @@ $(document).ready(function(){
                 'subject':subject,
                 'message':message
             },
+            headers: {
+                'X-CSRFToken': csrftoken
+              },
             dataType:"json",
             beforeSend:function(){
                 console.log("Sending data tp server...")
@@ -348,6 +394,9 @@ $(document).on('click','.delete-product',function(){
         data:{
             'id':product_id
         },
+        headers: {
+            'X-CSRFToken': csrftoken
+          },
         datatype: "json",
         beforeSend:function(){
         console.log('Trying deleted product:',product_id)

@@ -6,7 +6,7 @@
         <div class="col-lg-6">
             <div class="box-element" id="form-wrapper">
                 <form id="form" method="POST">
-                    
+
                     <div id="shipping-info">
                         <hr>
                         <p>Shipping Information:</p>
@@ -27,12 +27,12 @@
                             <input class="form-control" type="text" name="country" placeholder="{{active_address.country}}">
                         </div>
                     </div>
-                    
+
                     <hr>
                     <input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
-                    
+
                 </form>
-                <div >{{ paypal__payment_button.render}}</div>  
+                <div >{{ paypal__payment_button.render}}</div>
             </div>
             <br>
             <div class="box-element hidden" id="payment-info">
@@ -53,30 +53,30 @@
                     <div style="flex:1"><strong>Price</strong></div>
                     <div style="flex:1"><strong>Quantity</strong></div>
                     <div style="flex:1"><strong>Total</strong></div>
-                </div>  
+                </div>
                 {% for id, item in cart_data.items %}
                 <div class="cart-row">
                     <div style="flex:2"><img class="row-image" src="{{ item.product_image }}" ></div>
-                    <div style="flex:2"><a href="{% url 'test3' item.pid %}" >{{item.name}}</a></div>
+                    <div style="flex:2"><a href="{% url 'product' item.pid %}" >{{item.name}}</a></div>
                     <div style="flex:1"><strong>${{item.price}}</strong></div>
                     <div style="flex:1">
                         <p class="'quantity product-quantity-{{id}}" style="display: inline-block;" id="productquantity">{{item.quantity}}</p>
-                        <div class="quantity" style="display: inline-block; margin-left: 10px;" > 
+                        <div class="quantity" style="display: inline-block; margin-left: 10px;" >
                                 <img data-product="{{id}}" data-action="add" class="chg-quantity update-cart" src="{% static 'images/up icon.png' %}" >
                         <img data-product="{{id}}" data-action="remove" class="chg-quantity update-cart" src="{% static 'images/down icon.png' %}">
                         </div>
                     </div>
-                    <div style="flex:1"><strong class="product-price-{{ id }}" id="producttotalprice">{{ item.total_price }}</strong>                  
+                    <div style="flex:1"><strong class="product-price-{{ id }}" id="producttotalprice">{{ item.total_price }}</strong>
                     </div>
-                </div> 
+                </div>
                 {% endfor %}
                 <hr style="border: 2px solid black;">
                 <h5>Item:{{totalcartitems}}</h5>
                 <div style="flex:1"><h5 class="d-inline">Total:$</h5><h5 class="d-inline"><strong  id="producttotalprice">{{ cart_total_amount|floatformat:2 }}</h5></strong>
-                
+
             </div>
         </div>
-        
+
     </div>
 
 <div style=" height: 50px;"></div>

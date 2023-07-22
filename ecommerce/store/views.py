@@ -111,36 +111,36 @@ def cart(request):
     cartItems=data['cartItems']
     context={'items':items,"order":order,"cartItems":cartItems}
     return render(request,"Cart.html",context)
-def checkout(request):
-    data=cartData(request)
-    items=data['items']
-    order=data['order']
-    cartItems=data['cartItems']
-    context={'items':items,"order":order,"cartItems":cartItems}
-    return render(request,"Checkout.html",context)
+# def checkout(request):
+#     data=cartData(request)
+#     items=data['items']
+#     order=data['order']
+#     cartItems=data['cartItems']
+#     context={'items':items,"order":order,"cartItems":cartItems}
+#     return render(request,"Checkout.html",context)
 
-def updateItem(request):
-    data=json.loads(request.body)
-    productId = data['productId']
-    action=data['action']
+# def updateItem(request):
+#     data=json.loads(request.body)
+#     productId = data['productId']
+#     action=data['action']
 
 
-    print('Action:',action)
-    print('productId:',productId)
+#     print('Action:',action)
+#     print('productId:',productId)
 
-    customer=request.user.customer
-    product=Product.objects.get(id=productId)
-    order,created=Order.objects.get_or_create(customer=customer,complete=False)
-    orderItem,created=OrderItem.objects.get_or_create(product=product,order=order)
+#     customer=request.user.customer
+#     product=Product.objects.get(id=productId)
+#     order,created=Order.objects.get_or_create(customer=customer,complete=False)
+#     orderItem,created=OrderItem.objects.get_or_create(product=product,order=order)
 
-    if action=="add":
-        orderItem.quantity=(orderItem.quantity+1)
-    elif action=="remove":
-        orderItem.quantity=(orderItem.quantity-1)
-    orderItem.save()
-    if orderItem.quantity<=0:
-        orderItem.delete()
-    return JsonResponse("Item wsa added!!", safe=False)
+#     if action=="add":
+#         orderItem.quantity=(orderItem.quantity+1)
+#     elif action=="remove":
+#         orderItem.quantity=(orderItem.quantity-1)
+#     orderItem.save()
+#     if orderItem.quantity<=0:
+#         orderItem.delete()
+#     return JsonResponse("Item wsa added!!", safe=False)
 
 def processOrder(request):
     transaction_id=datetime.datetime.now().timestamp()
@@ -168,13 +168,12 @@ def processOrder(request):
             )
     return JsonResponse('Payment completed',safe=False)
 
-def test(request):
-    return render(request,'new cart/about.html')
-def contact_view(request):
+
+def contact(request):
     return render(request,'new cart/contact.html')
 
 
-def test2(request):
+def intro(request):
     category=Category.objects.all()
     # category=Category.objects.all().annotate(product_count=Count('product'))
     context={
@@ -183,7 +182,7 @@ def test2(request):
     }
     return render(request,'new cart/index.html',context)
 
-def test3(request,sui):
+def product(request,sui):
     product=Product.objects.get(sui=sui)
     p_images=product.p_image.all()
     related_product=Product.objects.filter(category=product.category)
@@ -218,7 +217,7 @@ def test3(request,sui):
 
     }
     return render(request,'new cart/shop-single.html',context)
-def test4(request):
+def store(request):
     category=Category.objects.all()
     filter=True
     products=Product.objects.all()
@@ -228,7 +227,7 @@ def test4(request):
 
              'category':category}
     return render(request,'new cart/shop.html',context)
-def test5(request, cid):
+def category_view(request, cid):
     filter=False
     category=Category.objects.get(cid=cid)
     product=Product.objects.filter(category=category)
@@ -311,11 +310,12 @@ def customer_detail(request,c_id):
     return render(request,'new cart/customer_detail.html',context)
 
 
-def test8(request,tag_slug=None):
+def tag_view(request,tag_slug=None):
     products=Product.objects.filter(product_status='published').order_by('-date')
     tag=None
     if tag_slug:
         tag=get_object_or_404(Tag,slug=tag_slug)
+        print(tag)
         products=products.filter(tags__in=[tag])
         context={
             'products':products,
@@ -410,7 +410,7 @@ def add_to_cart(request):
             cart_data[str(request.GET['id'])]['total_price'] = float(cart_data[str(request.GET['id'])]['price']) * int(cart_data[str(request.GET['id'])]['quantity'])
             cart_data.update(cart_data)
             request.session["cart_data_obj"] = cart_data
-            totalcaritems=len(request.session['cart_data_obj'])
+            totalcaritems = len(request.session['cart_data_obj'])
             del_wishlist(request,request.GET['id'])
         else:
             cart_data = request.session['cart_data_obj']

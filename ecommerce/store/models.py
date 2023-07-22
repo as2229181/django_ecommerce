@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from shortuuid.django_fields import ShortUUIDField
-from django.utils.html import mark_safe 
+from django.utils.html import mark_safe
 from taggit.managers import TaggableManager
 from ckeditor.fields import RichTextField
 from django.db.models.signals import post_save
@@ -19,7 +19,7 @@ def user_directory_path(instance,filename):
 STATUS_CHOICE=(
     ('process','Processing'),
     ('shipped','Shipped'),
-    ('deliered','Deliered'),    
+    ('deliered','Deliered'),
 )
 
 STATUS=(
@@ -27,7 +27,7 @@ STATUS=(
     ('disabled','Disabled'),
     ('rejected','Rejected'),
      ('in_review','In_Reiview'),
-     ('published','Published'),   
+     ('published','Published'),
 )
 
 
@@ -37,7 +37,7 @@ RATING=(
     ('2','★★✰✰✰'),
     ('3','★★★✰✰'),
     ('4','★★★★✰'),
-    ('5','★★★★★'),   
+    ('5','★★★★★'),
 )
 
 
@@ -50,29 +50,29 @@ class User(AbstractUser):
     username=models.CharField(max_length=200, null=False,blank=True)
     email= models.EmailField(unique=True)
     introduction=models.CharField(max_length=2000)
-   
+
     USERNAME_FIELD='email'
     REQUIRED_FIELDS=['username']
-    
+
     def __str__(self):
         return self.username
-        
-        
+
+
 class Category(models.Model):
-    cid=ShortUUIDField(unique=True, length=10, max_length=20, prefix='cat', alphabet='abcdefghijkl1234567890')       
+    cid=ShortUUIDField(unique=True, length=10, max_length=20, prefix='cat', alphabet='abcdefghijkl1234567890')
     title=models.CharField(max_length=100)
-    image=models.ImageField (upload_to='category')  
+    image=models.ImageField (upload_to='category')
     class Meta:
         verbose_name_plural='Categories'
-        
+
     def product_count(self):
         count=self.category.product.all()
         counts=sum([product.get_total for product in count])
         return counts
-    
+
     def Category_image(self):
         return mark_safe('<img src="%s" width="50" height="50"/>' %(self.image.url))
-    
+
     @property
     def imagURL(self):
         try:
@@ -97,7 +97,7 @@ class Vendor(models.Model):
     authentic_rating=models.CharField(max_length=100,default='100')
     days_return=models.CharField(max_length=100,default='100')
     warrant_period=models.CharField(max_length=100,default='100')
-    
+
     user=models.ForeignKey(User,on_delete=models.SET_NULL,null=True,blank=True)
     class Meta:
         verbose_name_plural='Vendors'
@@ -113,7 +113,7 @@ class Vendor(models.Model):
     def __str__(self):
         return self.title
 
-      
+
 class Customer(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE,null=True,blank=True)
     name=models.CharField(max_length=200,null=True)
@@ -130,11 +130,10 @@ class Customer(models.Model):
             url=""
         return url
 
-class Tag(models.Model):
-    pass
-######################################Product###############################################        
+
+######################################Product###############################################
 class Product(models.Model):
-    
+
     name=models.CharField(max_length=200)
     user=models.ForeignKey(User,on_delete=models.SET_NULL,null=True,blank=True)
     category=models.ForeignKey(Category,on_delete=models.SET_NULL,null=True,blank=True,related_name='product')
@@ -146,25 +145,25 @@ class Product(models.Model):
     specifications=models.TextField(null=True,blank=True )
     tags=TaggableManager(blank=True)
     stock_count=models.IntegerField(null=True,blank=True,default=100)
-    
+
     product_status=models.CharField(choices=STATUS,max_length=10, default='in_review')
-    
+
     status=models.BooleanField(default=True)
     in_stock=models.BooleanField(default=True)
     freature=models.BooleanField(default=False)
     digital=models.BooleanField(default=False,null=True,blank=False) #判斷是不是實體的東西所以要不要運送
-    
+
     sui=ShortUUIDField(unique=True,length=4 ,max_length=10,prefix='sui',alphabet='1234567890' )
     date=models.DateTimeField(auto_now_add=True,null=True,blank=True)
     updated=models.DateTimeField(null=True,blank=True)
-    
-    image =models.ImageField(upload_to=user_directory_path,default='product.png') 
-    
-    
+
+    image =models.ImageField(upload_to=user_directory_path,default='product.png')
+
+
     class Meta:
         verbose_name_plural='Products'
     def Product_image(self):
-        return mark_safe('<img src="%s" width="50" height="50"/>' % (self.image.url))    
+        return mark_safe('<img src="%s" width="50" height="50"/>' % (self.image.url))
     @property
     def imagURL(self):
         try:
@@ -177,7 +176,7 @@ class Product(models.Model):
         return  p_percentage
     def __str__(self):
         return self.name
-    
+
 class ProductImages(models.Model):
     image=models.ImageField(upload_to='images',default='product.png')
     product=models.ForeignKey(Product,related_name='p_image',on_delete=models.SET_NULL,null=True,blank=True)
@@ -191,7 +190,7 @@ class ProductImages(models.Model):
         except:
             url=""
         return url
- ################################Product###################################################       
+ ################################Product###################################################
 
 
 ################################## Cart,OrderItems,Address#################################
@@ -202,7 +201,7 @@ class Order(models.Model):
     complete=models.BooleanField(default=False,null=True,blank=False)
     product_status=models.CharField(choices=STATUS_CHOICE,max_length=33,default='processing')
     transaction_id=models.CharField(max_length=200,null=True)
-    
+
     @property
     def shipping(self):
         shipping=False
@@ -211,10 +210,10 @@ class Order(models.Model):
             if i.product.digital==False:
                 shipping=True
         return shipping
-    
+
     class Meta:
         verbose_name_plural='Orders'
-    
+
     @property
     def get_cart_total(self):
         orderitems=self.orderitem_set.all()#把customer所有產品定單資訊都拿出來
@@ -227,7 +226,7 @@ class Order(models.Model):
         return total
     def __str__(self):
         return str(self.id)
-        
+
 class OrderItem(models.Model):
     product=models.ForeignKey(Product,on_delete=models.SET_NULL,blank=True,null=True)
     order=models.ForeignKey(Order,on_delete=models.SET_NULL,blank=True,null=True)
@@ -238,14 +237,14 @@ class OrderItem(models.Model):
     class Meta:
         verbose_name_plural='Cart order items'
     def Order_image(self):
-        return mark_safe('<img src="/images/&s" width="50" height="50"/>' %(self.image)) 
+        return mark_safe('<img src="/images/&s" width="50" height="50"/>' %(self.image))
     @property
     def get_total(self):
         total=self.product.price*self.quantity
         return total
-   
+
 class ShippingAddress(models.Model):
-    customer=models.ForeignKey(Customer,on_delete=models.SET_NULL,null=True,related_name='address')  
+    customer=models.ForeignKey(Customer,on_delete=models.SET_NULL,null=True,related_name='address')
     address=models.CharField(max_length=200,null=False)
     city=models.CharField(max_length=200,null=False)
     state=models.CharField(max_length=200,null=False)
@@ -257,7 +256,7 @@ class ShippingAddress(models.Model):
         verbose_name_plural='Shipping address'
     def __str__(self):
         return self.address
-    
+
 ################################## Product Review,wishlist,Address#################################
 ################################## Product Review,wishlist,Address#################################
 ################################## Product Review,wishlist,Address#################################
@@ -270,25 +269,25 @@ class ProductReview(models.Model):
     date=models.DateField(auto_now_add=True)
     class Meta:
         verbose_name_plural='ProductReviews'
-        
+
     def __str__(self):
         return self.product.name
-    
+
     def get_rating(self):
         return self.rating
-    
-    
-    
+
+
+
 class WishList(models.Model):
     customer=models.ForeignKey(Customer,on_delete=models.SET_NULL,null=True)
     product=models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)
     date=models.DateField(auto_now_add=True)
     class Meta:
         verbose_name_plural='Wish List'
-        
+
     def __str__(self):
         return self.product.name
-    
+
 class ContactUs(models.Model):
     full_name = models.CharField(max_length=200,null=True,blank=True)
     email = models.CharField(max_length=200, null=True, blank=True)
@@ -308,7 +307,7 @@ class Profile(models.Model):
     introduction = models.CharField(max_length=200, null=True, blank=True)
     phone= models.CharField(max_length=200)
     verified = models.BooleanField(default=False)
-    
+
     def __str__(self):
         return self.user.username
     @property

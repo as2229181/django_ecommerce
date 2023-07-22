@@ -7,14 +7,14 @@
     {% if query %}
         {% if products %}
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>{{ query }} is founded!! </strong> 
+        <strong>{{ query }} is founded!! </strong>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
         {% else %}
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>{{ query }} is not founded!! </strong> 
+            <strong>{{ query }} is not founded!! </strong>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -85,9 +85,9 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="row">
-                
+
                 {% for product in products %}
                 <div class="col-md-4">
                     <div class="card mb-4 product-wap rounded-0">
@@ -102,7 +102,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <a href="{% url 'test3' product.sui %}" class="h3 text-decoration-none">{{ product.name }}</a>
+                            <a href="{% url 'product' product.sui %}" class="h3 text-decoration-none">{{ product.name }}</a>
                             <ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
                                 <li>s/m/l</li>
                                 <li class="pt-2">
@@ -123,11 +123,11 @@
                                 </li>
                             </ul>
                             <p class="text-center mb-0">{{product.price}}</p>
-                        </div>                           
+                        </div>
                     </div>
-                    
+
                 </div>
-            </div>    
+            </div>
                 {% endfor %}
             <div div="row">
                 <ul class="pagination pagination-lg justify-content-end">
